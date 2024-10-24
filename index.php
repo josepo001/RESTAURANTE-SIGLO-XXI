@@ -15,7 +15,7 @@
         <div class="body"></div> <!-- Sección de fondo del formulario -->
         <div class="grad"></div> <!-- Gradiente de fondo para el diseño -->
         <div class="header">
-            <div>Hospital Monte Esperanza</div> <!-- Título del formulario -->
+            <div>RESTAURANTE SIGLO XXI </div> <!-- Título del formulario -->
         </div>
         <br>
         <div class="login"> <!-- Contenedor para los campos de entrada -->
