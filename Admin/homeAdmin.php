@@ -36,7 +36,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css"> <!-- Enlace al CSS específico del panel de admin -->
+    <link rel="stylesheet" href="../css/homeAdmin.css">
     <title>Panel de Administrador</title>
 </head>
 <body>
@@ -70,6 +70,73 @@ try {
     <div style="text-align: left; margin-top: 20px;">
         <h1>Bienvenido, <?php echo htmlspecialchars($user['nombre']); ?></h1>
     </div>
-    <!--Content -->
+
+    <!-- Contenido Principal -->
+    <main style="margin: 20px;">
+        <section class="activity-summary">
+            <h2>Resumen de Actividad Reciente</h2>
+            <table>
+                <tr>
+                    <th>Mesa</th>
+                    <th>Cliente</th>
+                    <th>Hora del Pedido</th>
+                    <th>Estado</th>
+                </tr>
+                <?php
+                // Consulta para obtener pedidos recientes
+                $stmt = $db->prepare("SELECT mesa.numero AS mesa_numero, usuarios.nombre AS cliente, pedidos.fecha_pedido, pedidos.estado 
+                                      FROM pedidos 
+                                      JOIN mesas AS mesa ON pedidos.id_mesa = mesa.id 
+                                      JOIN usuarios ON pedidos.id_usuario = usuarios.id 
+                                      ORDER BY pedidos.fecha_pedido DESC LIMIT 5");
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                while ($pedido = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($pedido['mesa_numero']) . "</td>";
+                    echo "<td>" . htmlspecialchars($pedido['cliente']) . "</td>";
+                    echo "<td>" . htmlspecialchars($pedido['fecha_pedido']) . "</td>";
+                    echo "<td>" . htmlspecialchars($pedido['estado']) . "</td>";
+                    echo "</tr>";
+                }
+                ?>
+            </table>
+        </section>
+
+        <section class="low-stock">
+            <h2>Productos con Stock Bajo</h2>
+            <table>
+                <tr>
+                    <th>Producto</th>
+                    <th>Stock</th>
+                    <th>Acción</th>
+                </tr>
+                <?php
+                // Consulta para productos con stock bajo
+                $stmt = $db->prepare("SELECT nombre, stock FROM productos WHERE stock < 5 ORDER BY stock ASC");
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                while ($producto = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($producto['nombre']) . "</td>";
+                    echo "<td>" . htmlspecialchars($producto['stock']) . "</td>";
+                    echo "<td><a href='pedidos.php'>Realizar Pedido</a></td>";
+                    echo "</tr>";
+                }
+                ?>
+            </table>
+        </section>
+
+        <section class="quick-access">
+            <h2>Accesos Rápidos</h2>
+            <div class="buttons">
+                <a href="agregar_producto.php" class="btn">Agregar Producto</a>
+                <a href="agregar_pedido.php" class="btn">Realizar Pedido a Proveedor</a>
+                <a href="Registrar.php" class="btn">Registrar Nuevo Usuario</a>
+            </div>
+        </section>
+    </main>
 </body>
 </html>
