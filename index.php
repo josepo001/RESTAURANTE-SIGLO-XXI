@@ -15,12 +15,12 @@
         <div class="body"></div> <!-- Sección de fondo del formulario -->
         <div class="grad"></div> <!-- Gradiente de fondo para el diseño -->
         <div class="header">
-            <div>Hospital Monte Esperanza</div> <!-- Título del formulario -->
+            <div>Restaurante Siglo XXI</div> <!-- Título del formulario -->
         </div>
         <br>
         <div class="login"> <!-- Contenedor para los campos de entrada -->
-            <!-- Campo de entrada para el RUT del usuario -->
-            <input type="text" placeholder="Ingrese RUT" name="rut" required><br>
+            <!-- Campo de entrada para el correo electrónico del usuario -->
+            <input type="email" placeholder="Ingrese su correo" name="email" required><br>
             <!-- Campo de entrada para la contraseña del usuario -->
             <input type="password" placeholder="Ingrese su contraseña" name="password" required><br>
             <!-- Botón de envío para iniciar sesión -->
