@@ -1,0 +1,201 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Header */
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .logo h2 {
+    margin: 0;
+}
+
+.nav-menu ul {
+    list-style: none;
+    display: flex;
+}
+
+.nav-menu ul li {
+    margin-right: 20px;
+}
+
+.nav-menu ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.nav-menu ul li a:hover {
+    color: #ffa500;
+}
+
+/* Contenedor de las secciones de pedidos */
+.section {
+    width: 90%;
+    margin: 20px auto;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.section h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+/* Estilo de la tabla de pedidos */
+.section table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.section table th,
+.section table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.section table th {
+    background-color: #333;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+}
+
+.section table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.section table td {
+    text-align: center;
+}
+
+/* Select y campos de entrada en la tabla */
+.section table td select,
+.section table td input[type="number"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.section table td select:hover,
+.section table td input[type="number"]:hover {
+    border-color: #999;
+}
+
+/* Botón Guardar */
+.section table td button {
+    padding: 8px 12px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.section table td button:hover {
+    background-color: #218838;
+}
+/* Botón Agregar Pedido */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px auto;
+    width: 90%;
+}
+
+.section-header h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+.btn-agregar {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-agregar:hover {
+    background-color: #0056b3;
+}
+
+/* Tabla de Pedidos */
+.pedidos-container {
+    width: 90%;
+    margin: 20px auto;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.pedidos-container table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.pedidos-container table th,
+.pedidos-container table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.pedidos-container table th {
+    background-color: #333;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+}
+
+.pedidos-container table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.pedidos-container table td {
+    text-align: center;
+}
+
+.pedidos-container table td select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.pedidos-container table td select:hover {
+    border-color: #999;
+}

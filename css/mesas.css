@@ -1,0 +1,170 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Header */
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .logo h2 {
+    margin: 0;
+}
+
+.nav-menu ul {
+    list-style: none;
+    display: flex;
+}
+
+.nav-menu ul li {
+    margin-right: 20px;
+}
+
+.nav-menu ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.nav-menu ul li a:hover {
+    color: #ffa500;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+}
+
+.user-info i {
+    margin-right: 8px;
+}
+
+/* Page Title */
+h1 {
+    margin: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+/* Contenedor de búsqueda */
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.search-container form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#searchInput {
+    padding: 8px 12px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#searchButton {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#searchButton:hover {
+    background-color: #0056b3;
+}
+
+#clearButton {
+    padding: 8px 15px;
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#clearButton:hover {
+    background-color: #5a6268;
+}
+
+/* Botón de agregar mesa */
+.add-table-btn {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.add-table-btn .button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.add-table-btn .button:hover {
+    background-color: #218838;
+}
+
+/* Tabla de mesas */
+.mesas-container table {
+    width: 90%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #f9f9f9;
+}
+
+.mesas-container table th,
+.mesas-container table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.mesas-container table th {
+    background-color: #333;
+    color: #fff;
+    font-weight: bold;
+}
+
+.mesas-container table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.mesas-container table td button {
+    padding: 8px 12px;
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.mesas-container table td button:hover {
+    background-color: #c0392b;
+}
