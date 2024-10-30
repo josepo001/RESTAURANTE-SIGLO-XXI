@@ -50,6 +50,7 @@ try {
             <nav class="nav-menu">
                 <ul>
                     <li><a href="homeAdmin.php"><i class="fas fa-tachometer-alt"></i> Inicio</a></li>
+                    <li><a href="usuarios.php"><i class="fas fa-users"></i> Usuarios</a></li>
                     <li><a href="productos.php"><i class="fas fa-box"></i> Productos</a></li>
                     <li><a href="mesas.php"><i class="fas fa-chair"></i> Mesas</a></li>
                     <li><a href="pedidos.php"><i class="fas fa-truck"></i> Pedidos</a></li>
