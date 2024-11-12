@@ -1,0 +1,155 @@
+/* Estilos generales */
+body.bg-general {
+    background-color: #f3f4f6;
+    font-family: Arial, sans-serif;
+    color: #333;
+    margin: 0;
+}
+
+/* Barra de navegación */
+.navbar {
+    background-color: #8B4513;
+    color: white;
+    padding: 1rem 2rem;
+}
+
+.navbar .container {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar .logo {
+    font-size: 1.8rem;
+    font-family: 'Georgia', serif;
+    font-weight: bold;
+}
+
+.navbar .nav-links a {
+    color: white;
+    text-decoration: none;
+    margin-left: 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.navbar .nav-links a:hover {
+    color: #d1d5db;
+}
+
+/* Contenido principal */
+.main-content {
+    padding: 2rem 0;
+    max-width: 1120px;
+}
+
+/* Resumen General */
+.resumen-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+@media (min-width: 768px) {
+    .resumen-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.resumen-card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.resumen-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.resumen-card h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4a4a4a;
+    margin-bottom: 0.5rem;
+}
+
+.resumen-card p {
+    font-size: 2rem;
+    color: #4a4a4a;
+    font-weight: bold;
+}
+
+/* Sección General */
+.section {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.section-header h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #4a4a4a;
+}
+
+/* Botón */
+.btn {
+    background-color: #8B4513;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background-color: #b36b3b;
+}
+
+/* Tabla */
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background-color: #f9fafb;
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+th {
+    font-weight: bold;
+    color: #4a4a4a;
+}
+
+/* Estado de la sección oculta */
+.hidden {
+    display: none;
+}

@@ -12,46 +12,81 @@ $categoriaActual = isset($_GET['categoria']) ? $_GET['categoria'] : 'todos';
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
+        /* Hero Section */
         .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+            background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
                         url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80');
             background-size: cover;
             background-position: center;
             height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
         }
 
+        /* Card Styling */
         .card-hover {
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .card-hover:hover {
             transform: translateY(-5px);
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
         }
 
+        /* Precio */
         .precio {
-            color: #8B4513;
+            color: #d97706; /* Tono cálido para el precio */
             font-size: 1.5rem;
             font-weight: bold;
         }
 
+        /* Botón de agregar */
         .btn-agregar {
-            background-color: #8B4513;
+            background-color: #f59e0b;
             transition: background-color 0.3s ease;
         }
 
         .btn-agregar:hover {
-            background-color: #6B3410;
+            background-color: #d97706;
         }
 
+        /* Categorías Activas */
         .categoria-activa {
-            background-color: #8B4513;
+            background-color: #d97706;
             color: white;
+        }
+
+        /* Carrito flotante */
+        #carrito-flotante {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        /* Styling for Floating Cart */
+        #carrito-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #f59e0b;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+
+        /* Sombra suave */
+        .shadow-light {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
     </style>
 </head>
 <body class="bg-stone-50">
     <!-- Barra de Navegación -->
-    <nav class="bg-[#8B4513] text-white py-4 px-6 sticky top-0 z-50">
+    <nav class="bg-[#f59e0b] text-white py-4 px-6 shadow-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-2">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -63,13 +98,13 @@ $categoriaActual = isset($_GET['categoria']) ? $_GET['categoria'] : 'todos';
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                <span id="carrito-contador" class="absolute -top-2 -right-2 bg-amber-400 text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+                <span id="carrito-contador" class="absolute -top-2 -right-2 bg-white text-[#f59e0b] text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <div class="hero-section flex items-center justify-center text-center text-white mb-8">
+    <div class="hero-section">
         <div>
             <h2 class="text-4xl font-serif mb-4">Bienvenido a nuestra mesa</h2>
             <p class="text-xl">50 años de tradición y sabor casero</p>
@@ -77,7 +112,7 @@ $categoriaActual = isset($_GET['categoria']) ? $_GET['categoria'] : 'todos';
     </div>
 
     <!-- Categorías -->
-    <div class="max-w-7xl mx-auto px-4 mb-8">
+    <div class="max-w-7xl mx-auto px-4 my-8">
         <div class="flex space-x-4 overflow-x-auto py-4">
             <?php
             $categorias = [
@@ -90,7 +125,7 @@ $categoriaActual = isset($_GET['categoria']) ? $_GET['categoria'] : 'todos';
             ];
 
             foreach ($categorias as $cat) {
-                $activeClass = $categoriaActual === $cat['id'] ? 'categoria-activa' : 'bg-white hover:bg-[#8B4513] hover:text-white';
+                $activeClass = $categoriaActual === $cat['id'] ? 'categoria-activa' : 'bg-white hover:bg-[#f59e0b] hover:text-white';
                 echo "<a href='?categoria={$cat['id']}' 
                         class='flex-shrink-0 px-6 py-2 rounded-full shadow-md transition-colors {$activeClass}'>
                         {$cat['nombre']}
@@ -110,15 +145,11 @@ $categoriaActual = isset($_GET['categoria']) ? $_GET['categoria'] : 'todos';
             $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             
-            // Consulta modificada que incluye verificación de disponibilidad
             $query = "
-                SELECT 
-                    p.*,
-                    CASE 
-                        WHEN r.id_producto IS NULL THEN 1
-                        WHEN MIN(i.stock >= r.cantidad) THEN 1
-                        ELSE 0
-                    END as disponible
+                SELECT p.*, 
+                       CASE WHEN r.id_producto IS NULL THEN 1 
+                            WHEN MIN(i.stock >= r.cantidad) THEN 1 
+                            ELSE 0 END as disponible
                 FROM productos p
                 LEFT JOIN recetas r ON p.id = r.id_producto
                 LEFT JOIN ingredientes i ON r.id_ingrediente = i.id
@@ -129,7 +160,7 @@ $categoriaActual = isset($_GET['categoria']) ? $_GET['categoria'] : 'todos';
                 $query .= " AND p.categoria = :categoria";
             }
             
-            $query .= " GROUP BY p.id, p.nombre, p.descripcion, p.imagen, p.precio, p.categoria";
+            $query .= " GROUP BY p.id";
             
             $stmt = $conn->prepare($query);
             if ($categoriaActual !== 'todos') {
@@ -142,46 +173,19 @@ $categoriaActual = isset($_GET['categoria']) ? $_GET['categoria'] : 'todos';
                 $disponible = $producto['disponible'] == 1;
         ?>
                 <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
-                    <img src="<?php echo htmlspecialchars($imagen); ?>" 
-                         alt="<?php echo htmlspecialchars($producto['nombre']); ?>" 
-                         class="w-full h-48 object-cover"
-                         onerror="this.src='img/default.jpg'">
+                    <img src="<?php echo htmlspecialchars($imagen); ?>" alt="<?php echo htmlspecialchars($producto['nombre']); ?>" class="w-full h-48 object-cover" onerror="this.src='img/default.jpg'">
                     <div class="p-6">
-                        <div class="flex justify-between items-start mb-2">
-                            <h3 class="text-xl font-bold"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
-                            <?php if (!$disponible): ?>
-                                <span class="px-2 py-1 bg-red-100 text-red-800 text-sm rounded-full">
-                                    No Disponible
-                                </span>
-                            <?php endif; ?>
-                        </div>
+                        <h3 class="text-xl font-bold"><?php echo htmlspecialchars($producto['nombre']); ?></h3>
                         <p class="text-gray-600 mb-4"><?php echo htmlspecialchars($producto['descripcion']); ?></p>
                         <div class="flex justify-between items-center">
                             <span class="precio">$<?php echo number_format($producto['precio'], 2); ?></span>
-                            <?php if ($disponible): ?>
-                                <button 
-                                    class="btn-agregar text-white px-6 py-2 rounded-full hover:bg-amber-700 transition-colors"
-                                    onclick="agregarAlCarrito(<?php echo htmlspecialchars(json_encode($producto)); ?>)"
-                                >
-                                    Agregar al pedido
-                                </button>
-                            <?php else: ?>
-                                <button 
-                                    class="bg-gray-300 text-gray-500 px-6 py-2 rounded-full cursor-not-allowed"
-                                    disabled
-                                >
-                                    No disponible
-                                </button>
-                            <?php endif; ?>
+                            <button class="btn-agregar text-white px-4 py-2 rounded-full transition" onclick="agregarAlCarrito(<?php echo htmlspecialchars(json_encode($producto)); ?>)">
+                                Agregar al pedido
+                            </button>
                         </div>
                     </div>
                 </div>
-        <?php
-            }
-        } catch(PDOException $e) {
-            echo "<div class='text-red-500'>Error de conexión: " . $e->getMessage() . "</div>";
-        }
-        ?>
+        <?php } } catch(PDOException $e) { echo "<p>Error: " . $e->getMessage() . "</p>"; } ?>
     </div>
 </div>
 

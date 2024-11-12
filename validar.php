@@ -34,13 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     header('Location: Admin/homeAdmin.php');
                     break;
                 case 'bodega':
-                    header('Location: Bodega/homeBodega.php');
+                    header('Location: Bodega/homeb.php');
                     break;
                 case 'finanzas':
-                    header('Location: Finanzas/homeFinanzas.php');
+                    header('Location: Finanzas/homef.php');
                     break;
                 case 'cocina':
-                    header('Location: Cocina/homeCocina.php');
+                    header('Location: Cocina/homec.php');
                     break;
                 default:
                     $_SESSION['error'] = "Rol de usuario no reconocido.";

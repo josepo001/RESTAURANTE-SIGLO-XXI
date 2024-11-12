@@ -30,17 +30,19 @@ try {
         if ($password) {
             $password_hash = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $db->prepare("UPDATE usuarios SET nombre = ?, apellido = ?, email = ?, password = ? WHERE id = ?");
-            $stmt->execute([$nombre, $apellido, $email, $password_hash, $_SESSION['user_id']]);
+            $stmt->bind_param("ssssi", $nombre, $apellido, $email, $password_hash, $_SESSION['user_id']);
+            $stmt->execute();
         } else {
             $stmt = $db->prepare("UPDATE usuarios SET nombre = ?, apellido = ?, email = ? WHERE id = ?");
-            $stmt->execute([$nombre, $apellido, $email, $_SESSION['user_id']]);
+            $stmt->bind_param("sssi", $nombre, $apellido, $email, $_SESSION['user_id']);
+            $stmt->execute();
         }
 
         $_SESSION['mensaje'] = "Perfil actualizado correctamente";
         header('Location: perfilAdmin.php');
         exit;
     }
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     die("Error: " . $e->getMessage());
 }
 ?>
@@ -55,34 +57,34 @@ try {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-     <!-- Header -->
-     <header class="header">
+    <header class="header">
         <div class="header-content">
             <div class="logo">
                 <h2>Santuario Blondi</h2>
             </div>
             <nav class="nav-menu">
                 <ul>
-                    <li><a href="usuarios.php"><i class="fas fa-home"></i> Inicio</a></li>
+                    <li><a href="homeAdmin.php"><i class="fas fa-tachometer-alt"></i> Inicio</a></li>
+                    <li><a href="usuarios.php"><i class="fas fa-users"></i> Usuarios</a></li>
+                    <li><a href="productos.php"><i class="fas fa-box"></i> Productos</a></li>
+                    <li><a href="mesas.php"><i class="fas fa-chair"></i> Mesas</a></li>
+                    <li><a href="pedidos.php"><i class="fas fa-truck"></i> Pedidos</a></li>
+                    <li><a href="reportes.php"><i class="fas fa-chart-line"></i> Reportes</a></li>
                     <li><a href="perfilAdmin.php"><i class="fas fa-user"></i> Mi Perfil</a></li>
                     <li><a href="../cerrar-sesion.php"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
                 </ul>
             </nav>
             <div class="user-info">
-                <i class="fas fa-user-circle" style="font-size: 24px; margin-right: 8px;"></i> <!-- Ícono de usuario -->
-                <span><?php echo htmlspecialchars($user['nombre'] . ' ' . $user['apellido']); ?></span>
+                <i class="fas fa-user-circle" style="font-size: 24px; margin-right: 8px;"></i>
+                <span><?php echo htmlspecialchars($user['nombre'] . ' ' . ($user['apellido'] ?? '')); ?></span>
                 <br>
-                <small><?php echo ucfirst($user['tipo_usuario']); ?></small>
+                <small><?php echo ucfirst($user['tipo_usuario'] ?? ''); ?></small>
             </div>
         </div>
     </header>
     
-    <div >
-        <h1>Mi Perfil</h1>
-    </div>
-    
     <div class="main-content">
-        
+        <h1>Mi Perfil</h1>
         
         <div class="profile-container">
             <?php if (isset($_SESSION['mensaje'])): ?>
@@ -98,19 +100,19 @@ try {
                 <div class="form-group">
                     <label for="nombre">Nombre</label>
                     <input type="text" id="nombre" name="nombre" 
-                           value="<?php echo htmlspecialchars($user['nombre']); ?>" required>
+                           value="<?php echo htmlspecialchars($user['nombre'] ?? ''); ?>" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="apellido">Apellido</label>
                     <input type="text" id="apellido" name="apellido" 
-                           value="<?php echo htmlspecialchars($user['apellido']); ?>" required>
+                           value="<?php echo htmlspecialchars($user['apellido'] ?? ''); ?>" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" 
-                           value="<?php echo htmlspecialchars($user['email']); ?>" required>
+                           value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" required>
                 </div>
                 
                 <div class="form-group">
@@ -122,11 +124,5 @@ try {
             </form>
         </div>
     </div>
-    <script>
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            sidebar.classList.toggle('hidden');
-        }
-    </script>
 </body>
 </html>
