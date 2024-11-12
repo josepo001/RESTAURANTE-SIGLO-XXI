@@ -1,0 +1,42 @@
+Array
+(
+    [nombre] => Salsa de tomate
+    [stock] => 12
+    [stock_minimo] => 5
+    [unidad] => 230gr
+)
+
+SQL: INSERT INTO ingredientes (nombre, cantidad, unidad, stock, stock_minimo) 
+                VALUES (:nombre, :cantidad, :unidad, :stock, :stock_minimo)
+Params: Array
+(
+    [:nombre] => Salsa de tomate
+    [:cantidad] => 12
+    [:unidad] => 230gr
+    [:stock] => 12
+    [:stock_minimo] => 5
+)
+
+Array
+(
+    [nombre] => Salsa de tomate
+    [stock] => 12
+    [stock_minimo] => 5
+    [unidad] => 230gr
+)
+
+SQL: UPDATE ingredientes 
+                SET cantidad = :cantidad, 
+                    unidad = :unidad, 
+                    stock = :stock, 
+                    stock_minimo = :stock_minimo 
+                WHERE nombre = :nombre
+Params: Array
+(
+    [:nombre] => Salsa de tomate
+    [:cantidad] => 12
+    [:unidad] => 230gr
+    [:stock] => 12
+    [:stock_minimo] => 5
+)
+
