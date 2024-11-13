@@ -5,6 +5,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 require_once '../Admin/DB.php'; // Asegúrate de que la ruta sea correcta
 
+// Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -38,12 +39,12 @@ try {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar</title>
+    <title>Editar Usuario</title>
     <link rel="stylesheet" href="../css/editar.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -54,33 +55,32 @@ try {
 
 <!-- FORMULARIO -->
 <form class="profile-form" action="procesar_editar.php" method="post" enctype="multipart/form-data">
-    <input type="hidden" value="<?php echo htmlspecialchars($user['id']); ?>" name="txtID">        
+    <input type="hidden" value="<?php echo htmlspecialchars($user['id'] ?? ''); ?>" name="txtID">        
 
     <div class="form-group">
         <label for="inputNombre"><b>NOMBRE</b></label>
-        <input id="inputNombre" class="form-control" type="text" value="<?php echo htmlspecialchars($user['nombre']); ?>" name="txtNombre" required>
+        <input id="inputNombre" class="form-control" type="text" value="<?php echo htmlspecialchars($user['nombre'] ?? ''); ?>" name="txtNombre" required>
     </div>
 
-    <div class="form-group">
-        <label for="inputApellido"><b>APELLIDO</b></label>
-        <input id="inputApellido" class="form-control" type="text" value="<?php echo htmlspecialchars($user['apellido']); ?>" name="txtApellido" required>
-    </div>
+    
     
     <div class="form-group">
         <label for="inputEmail"><b>EMAIL</b></label>
-        <input id="inputEmail" class="form-control" type="email" value="<?php echo htmlspecialchars($user['email']); ?>" name="txtEmail" required>
+        <input id="inputEmail" class="form-control" type="email" value="<?php echo htmlspecialchars($user['email'] ?? ''); ?>" name="txtEmail" required>
     </div>
 
     <div class="form-group">
         <label for="inputPassword"><b>CONTRASEÑA</b></label>
-        <input id="inputPassword" class="form-control" type="password" name="txtPassword" placeholder="dejar vacío si no desea cambiar">
+        <input id="inputPassword" class="form-control" type="password" name="txtPassword" placeholder="Dejar vacío si no desea cambiar">
     </div>
     
     <div class="form-group">
         <label for="tipoUsuario"><b>TIPO DE USUARIO</b></label>
         <select name="txtTipoUsuario" id="tipoUsuario">
-            <option value="admin" <?php echo $user['tipo_usuario'] == 'admin' ? 'selected' : ''; ?>>Admin</option>
-            <option value="doctor" <?php echo $user['tipo_usuario'] == 'empleado' ? 'selected' : ''; ?>>Empleado</option>
+            <option value="admin" <?php echo (isset($user['tipo_usuario']) && $user['tipo_usuario'] == 'admin') ? 'selected' : ''; ?>>Admin</option>
+            <option value="Bodega" <?php echo (isset($user['tipo_usuario']) && $user['tipo_usuario'] == 'bodega') ? 'selected' : ''; ?>>Empleado</option>
+            <option value="cocina" <?php echo (isset($user['tipo_usuario']) && $user['tipo_usuario'] == 'cocina') ? 'selected' : ''; ?>>Empleado</option>
+            <option value="finanzas" <?php echo (isset($user['tipo_usuario']) && $user['tipo_usuario'] == 'fianazas') ? 'selected' : ''; ?>>Empleado</option>
         </select>
     </div>
 

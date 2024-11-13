@@ -58,7 +58,7 @@ try {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -123,7 +123,8 @@ try {
                     <th>Precio</th>
                     <th>Stock</th>
                     <th>Fecha Agregado</th>
-                    <th>Acciones</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
                 </tr>
             </thead>
             <tbody>
@@ -135,9 +136,14 @@ try {
                         <td><?php echo htmlspecialchars($row['stock']); ?></td>
                         <td><?php echo htmlspecialchars($row['fecha_agregado']); ?></td>
                         <td>
+                            <!-- Botón de Editar -->
+                            <a href="editar_producto.php?id=<?php echo $row['id']; ?>" class="btn-editar">Editar</a>
+                        </td>
+                        <td>
+                            <!-- Formulario de Eliminar -->
                             <form method="post" style="display:inline;">
                                 <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                <button type="submit" name="accion" value="eliminar">Eliminar</button>
+                                <button type="submit" name="accion" value="eliminar" class="btn-eliminar">Eliminar</button>
                             </form>
                         </td>
                     </tr>

@@ -90,19 +90,44 @@ h1 {
     background-color: #f1f1f1;
 }
 
-.productos-container table td button {
+/* Botones de acción en la tabla */
+.productos-container table td .btn-editar,
+.productos-container table td .btn-eliminar {
     padding: 8px 12px;
-    background-color: #e74c3c;
     color: #fff;
     border: none;
-    border-radius: 3px;
+    border-radius: 5px;
     cursor: pointer;
     font-size: 14px;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+    text-align: center;
 }
 
-.productos-container table td button:hover {
-    background-color: #c0392b;
+/* Estilo del botón Editar */
+.btn-editar {
+    background-color: #007bff;
 }
+
+.btn-editar:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo del botón Eliminar */
+.btn-eliminar {
+    background-color: #dc3545;
+}
+
+.btn-eliminar:hover {
+    background-color: #c82333;
+}
+
+/* Contenedor de botones alineados */
+.productos-container table td .acciones {
+    display: flex;
+    gap: 5px; /* Espacio entre los botones */
+}
+
 /* Estilo del botón de agregar producto */
 .add-product-btn {
     text-align: center;
@@ -122,6 +147,7 @@ h1 {
 .add-product-btn .button:hover {
     background-color: #218838;
 }
+
 /* Estilo del contenedor de búsqueda */
 .search-container {
     display: flex;
@@ -143,15 +169,19 @@ h1 {
     font-size: 14px;
 }
 
-#searchButton {
+#searchButton,
+#clearButton {
     padding: 8px 15px;
-    background-color: #007bff;
     color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
     font-weight: bold;
+}
+
+#searchButton {
+    background-color: #007bff;
 }
 
 #searchButton:hover {
@@ -159,16 +189,66 @@ h1 {
 }
 
 #clearButton {
-    padding: 8px 15px;
     background-color: #6c757d;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
 }
 
 #clearButton:hover {
+    background-color: #5a6268;
+}
+
+/* Formulario de edición */
+form {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button[type="submit"],
+.btn-cancelar {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+button[type="submit"] {
+    background-color: #ff0000;
+    color: #fff;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.btn-cancelar {
+    background-color: #6c757d;
+    color: #fff;
+    margin-left: 10px;
+}
+
+.btn-cancelar:hover {
     background-color: #5a6268;
 }

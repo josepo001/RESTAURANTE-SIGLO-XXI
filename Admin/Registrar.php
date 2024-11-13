@@ -5,6 +5,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 require_once 'DB.php'; // Asegúrate de que la ruta sea correcta
 
+// Verificar que el usuario haya iniciado sesión
 if (!isset($_SESSION['user_id'])) {
     header('Location: index.php');
     exit;
@@ -17,16 +18,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $db = getDB();
 
     // Capturar los datos del formulario
-    $rut = $_POST['rut'];
     $nombre = $_POST['nombre'];
-    $apellido = $_POST['apellido'];
     $email = $_POST['email'];
-    $tipo_usuario = $_POST['tipo_usuario'];
+    $rol = $_POST['rol'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Encriptar la contraseña
 
     try {
-        // Validar si el email ya existe
+        // Validar si el email ya existe en la base de datos
         $checkEmailStmt = $db->prepare("SELECT COUNT(*) FROM usuarios WHERE email = ?");
+        if (!$checkEmailStmt) {
+            throw new Exception("Error en la consulta de verificación de email: " . $db->error);
+        }
         $checkEmailStmt->bind_param("s", $email);
         $checkEmailStmt->execute();
         $checkEmailStmt->bind_result($count);
@@ -37,21 +39,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             throw new Exception("El email ya está en uso.");
         }
 
-        // Validar si el RUT ya existe
-        $checkRUTStmt = $db->prepare("SELECT COUNT(*) FROM usuarios WHERE rut = ?");
-        $checkRUTStmt->bind_param("s", $rut);
-        $checkRUTStmt->execute();
-        $checkRUTStmt->bind_result($countRUT);
-        $checkRUTStmt->fetch();
-        $checkRUTStmt->close();
-
-        if ($countRUT > 0) {
-            throw new Exception("El RUT ya está en uso.");
+        // Insertar nuevo usuario en la base de datos
+        $stmt = $db->prepare("INSERT INTO usuarios (nombre, email, contraseña, rol) VALUES (?, ?, ?, ?)");
+        if (!$stmt) {
+            throw new Exception("Error en la consulta de inserción de usuario: " . $db->error);
         }
-
-        // Insertar nuevo usuario
-        $stmt = $db->prepare("INSERT INTO usuarios (rut, nombre, apellido, email, tipo_usuario, password) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("ssssss", $rut, $nombre, $apellido, $email, $tipo_usuario, $password);
+        $stmt->bind_param("ssss", $nombre, $email, $password, $rol);
         $stmt->execute();
 
         // Redirigir con mensaje de éxito
@@ -70,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar Usuario</title>
-    <link rel="stylesheet" href="../css/registrar.css"> <!-- Asegúrate de tener un CSS para esta página -->
+    <link rel="stylesheet" href="../css/registrar.css">
 </head>
 <body>
     <header class="header">
@@ -78,7 +71,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </header>
 
     <div class="position-absolute top-0 start-0 p-3">
-        <a href="usuarios.php" class="btn btn-secondary blanco">Volver</a>
+    <a href="usuarios.php" class="btn-volver">Volver</a>
+
     </div>
 
     <?php if ($mensaje): ?>
@@ -89,27 +83,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <form method="POST" action="">
         <div>
-            <label for="rut">RUT:</label>
-            <input type="text" name="rut" id="rut" required>
-        </div>
-        <div>
             <label for="nombre">Nombre:</label>
             <input type="text" name="nombre" id="nombre" required>
-        </div>
-        <div>
-            <label for="apellido">Apellido:</label>
-            <input type="text" name="apellido" id="apellido" required>
         </div>
         <div>
             <label for="email">Email:</label>
             <input type="email" name="email" id="email" required>
         </div>
         <div>
-            <label for="tipo_usuario">Tipo de Usuario:</label>
-            <select name="tipo_usuario" id="tipo_usuario" required>
-                <option value="admin">Admin</option>
-                <option value="doctor">Doctor</option>
-                <option value="paciente">Paciente</option>
+            <label for="rol">Rol:</label>
+            <select name="rol" id="rol" required>
+                <option value="administrador">Administrador</option>
+                <option value="cocina">Cliente</option>
+                <option value="bodega">Bodega</option>
+                <option value="finanzas">Finanzas</option>
             </select>
         </div>
         <div>
