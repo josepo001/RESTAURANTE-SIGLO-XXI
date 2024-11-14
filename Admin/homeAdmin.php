@@ -85,11 +85,11 @@ try {
                 </tr>
                 <?php
                 // Consulta para obtener pedidos recientes
-                $stmt = $db->prepare("SELECT mesa.numero AS mesa_numero, usuarios.nombre AS cliente, pedidos.fecha_pedido, pedidos.estado 
-                                      FROM pedidos 
-                                      JOIN mesas AS mesa ON pedidos.id_mesa = mesa.id 
-                                      JOIN usuarios ON pedidos.id_usuario = usuarios.id 
-                                      ORDER BY pedidos.fecha_pedido DESC LIMIT 5");
+$stmt = $db->prepare("SELECT mesa.numero AS mesa_numero, pedidos.nombre_cliente AS cliente, pedidos.fecha_pedido, pedidos.estado 
+FROM pedidos 
+JOIN mesas AS mesa ON pedidos.id_mesa = mesa.id 
+ORDER BY pedidos.fecha_pedido DESC LIMIT 5");
+
                 $stmt->execute();
                 $result = $stmt->get_result();
 
