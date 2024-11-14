@@ -17,7 +17,7 @@ try {
             p.id_mesa,
             p.nombre_cliente,
             p.estado,
-            p.tiempo_estimado,
+            
             p.fecha_pedido,
             GROUP_CONCAT(
                 CONCAT(
@@ -31,7 +31,7 @@ try {
         FROM pedidos p
         LEFT JOIN detalle_pedidos dp ON p.id = dp.id_pedido
         LEFT JOIN productos pr ON dp.id_producto = pr.id
-        WHERE p.estado IN ('pendiente', 'en preparación', 'completado')
+        WHERE p.estado IN ('pendiente', 'en preparación', 'completado', 'entregado')
         GROUP BY p.id
         ORDER BY p.fecha_pedido ASC
     ");

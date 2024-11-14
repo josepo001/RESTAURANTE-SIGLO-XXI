@@ -29,17 +29,16 @@ try {
         $stmt->bind_param("sssss", $nombre, $contacto, $telefono, $email, $direccion);
         $stmt->execute();
 
-        // Redirigir a la lista de proveedores después de agregar
-        header("Location: proveedores.php");
+        // Redirigir a la página de pedidos después de agregar el proveedor
+        header("Location: pedidos.php");
         exit;
     }
 } catch (Exception $e) {
     die("Error al procesar la solicitud: " . $e->getMessage());
 }
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

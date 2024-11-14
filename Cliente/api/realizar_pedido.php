@@ -18,9 +18,9 @@ try {
     // Iniciar transacción
     $conn->beginTransaction();
     
-    // Crear el pedido
-    $stmt = $conn->prepare("INSERT INTO pedidos (id_cliente, fecha) VALUES (?, NOW())");
-    $stmt->execute([$_SESSION['id_usuario']]);
+    // Crear el pedido utilizando nombre_cliente
+    $stmt = $conn->prepare("INSERT INTO pedidos (nombre_cliente, fecha) VALUES (?, NOW())");
+    $stmt->execute([$data['nombre_cliente']]);
     $id_pedido = $conn->lastInsertId();
     
     // Insertar detalles del pedido

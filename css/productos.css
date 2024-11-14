@@ -6,36 +6,53 @@
     font-family: Arial, sans-serif;
 }
 
-/* Header */
-.header {
-    background-color: #333;
-    color: #fff;
+/* Body */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f5f5f5;
+    color: #333;
     padding: 20px;
 }
 
+/* Header */
+.header {
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    padding: 15px 0;
+}
+
 .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 0 20px;
 }
 
 .header .logo h2 {
+    font-size: 1.5rem;
     margin: 0;
 }
 
 .nav-menu ul {
     list-style: none;
     display: flex;
+    gap: 15px;
 }
 
 .nav-menu ul li {
-    margin-right: 20px;
+    margin-right: 10px;
 }
 
 .nav-menu ul li a {
     color: #fff;
     text-decoration: none;
-    font-size: 16px;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
 }
 
 .nav-menu ul li a:hover {
@@ -45,26 +62,34 @@
 .user-info {
     display: flex;
     align-items: center;
-    font-size: 14px;
+    gap: 8px;
+    font-size: 0.9rem;
 }
 
 .user-info i {
-    margin-right: 8px;
+    font-size: 1.2rem;
 }
 
-/* Page Title */
+/* Título principal */
 h1 {
-    margin: 20px;
-    font-size: 24px;
+    font-size: 2rem;
     color: #333;
+    margin: 20px 0;
+    text-align: center;
 }
 
-/* Products Container */
+/* Contenedor de la Tabla */
 .productos-container {
-    width: 90%;
+    width: 100%;
+    max-width: 1200px;
     margin: 20px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* Estilos de la Tabla */
 .productos-container table {
     width: 100%;
     border-collapse: collapse;
@@ -75,7 +100,7 @@ h1 {
 
 .productos-container table th,
 .productos-container table td {
-    padding: 12px;
+    padding: 12px 15px;
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
@@ -86,25 +111,33 @@ h1 {
     font-weight: bold;
 }
 
-.productos-container table tr:hover {
-    background-color: #f1f1f1;
+.productos-container table tr:nth-child(even) {
+    background-color: #f9f9f9;
 }
 
-/* Botones de acción en la tabla */
-.productos-container table td .btn-editar,
-.productos-container table td .btn-eliminar {
+.productos-container table tr:hover {
+    background-color: #e0e0e0;
+}
+
+/* Botones de Acción */
+.acciones {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+}
+
+.btn-editar, .btn-eliminar {
     padding: 8px 12px;
-    color: #fff;
-    border: none;
     border-radius: 5px;
+    color: #fff;
+    font-size: 0.9rem;
+    text-decoration: none;
     cursor: pointer;
-    font-size: 14px;
     transition: background-color 0.3s ease;
-    display: inline-block;
+    border: none;
     text-align: center;
 }
 
-/* Estilo del botón Editar */
+/* Botón Editar */
 .btn-editar {
     background-color: #007bff;
 }
@@ -113,7 +146,7 @@ h1 {
     background-color: #0056b3;
 }
 
-/* Estilo del botón Eliminar */
+/* Botón Eliminar */
 .btn-eliminar {
     background-color: #dc3545;
 }
@@ -122,25 +155,20 @@ h1 {
     background-color: #c82333;
 }
 
-/* Contenedor de botones alineados */
-.productos-container table td .acciones {
-    display: flex;
-    gap: 5px; /* Espacio entre los botones */
-}
-
-/* Estilo del botón de agregar producto */
+/* Botón Agregar Producto */
 .add-product-btn {
-    text-align: center;
+    display: flex;
+    justify-content: center;
     margin: 20px 0;
 }
 
 .add-product-btn .button {
-    padding: 10px 20px;
+    padding: 12px 20px;
     background-color: #28a745;
     color: #fff;
     text-decoration: none;
     border-radius: 5px;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: bold;
 }
 
@@ -148,7 +176,7 @@ h1 {
     background-color: #218838;
 }
 
-/* Estilo del contenedor de búsqueda */
+/* Contenedor de Búsqueda */
 .search-container {
     display: flex;
     justify-content: center;
@@ -163,20 +191,19 @@ h1 {
 
 #searchInput {
     padding: 8px 12px;
-    width: 200px;
+    width: 250px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 0.9rem;
 }
 
-#searchButton,
-#clearButton {
+#searchButton, #clearButton {
     padding: 8px 15px;
     color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 0.9rem;
     font-weight: bold;
 }
 
@@ -196,59 +223,39 @@ h1 {
     background-color: #5a6268;
 }
 
-/* Formulario de edición */
-form {
-    max-width: 500px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #f5f5f5;
-    border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+/* Responsividad */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .productos-container {
+        padding: 15px;
+    }
+
+    .productos-container table th, .productos-container table td {
+        padding: 10px;
+    }
+
+    #searchInput {
+        width: 100%;
+    }
+
+    .acciones {
+        flex-direction: column;
+        gap: 5px;
+    }
 }
 
-.form-group {
-    margin-bottom: 15px;
-}
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.5rem;
+    }
 
-label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 5px;
-}
-
-input[type="text"],
-input[type="number"],
-textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-button[type="submit"],
-.btn-cancelar {
-    padding: 10px 15px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-button[type="submit"] {
-    background-color: #ff0000;
-    color: #fff;
-}
-
-button[type="submit"]:hover {
-    background-color: #0056b3;
-}
-
-.btn-cancelar {
-    background-color: #6c757d;
-    color: #fff;
-    margin-left: 10px;
-}
-
-.btn-cancelar:hover {
-    background-color: #5a6268;
+    .add-product-btn .button {
+        font-size: 0.9rem;
+        padding: 10px 15px;
+    }
 }

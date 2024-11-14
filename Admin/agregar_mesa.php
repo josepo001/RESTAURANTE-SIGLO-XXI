@@ -34,9 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Insertar mesa
             $stmt = $db->prepare("INSERT INTO mesas (numero, capacidad, estado) VALUES (?, ?, ?)");
             $stmt->bind_param("iis", $numero, $capacidad, $estado);
-            $stmt->execute();
-
-            $success = 'Mesa agregada exitosamente.';
+            if ($stmt->execute()) {
+                $success = 'Mesa agregada exitosamente.';
+            } else {
+                $error = 'Error al agregar la mesa.';
+            }
         } catch (Exception $e) {
             $error = 'Error al agregar la mesa: ' . $e->getMessage();
         }
@@ -45,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,12 +84,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <h1>Agregar Nueva Mesa</h1>
         <form method="POST" action="agregar_mesa.php">
             <label for="numero">Número de Mesa*</label>
-            <input type="number" id="numero" name="numero" required>
+            <input type="number" id="numero" name="numero" required min="1" placeholder="Ej. 1">
 
             <label for="capacidad">Capacidad*</label>
-            <input type="number" id="capacidad" name="capacidad" required>
+            <input type="number" id="capacidad" name="capacidad" required min="1" placeholder="Ej. 4">
 
             <label for="estado">Estado*</label>
+            <select id="estado" name="estado" required>
+                <option value="disponible">Disponible</option>
+                <option value="ocupada">Ocupada</option>
+            </select>
+
             <button type="submit" class="button">Agregar Mesa</button>
         </form>
     </div>

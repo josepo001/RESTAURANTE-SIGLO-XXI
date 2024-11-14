@@ -29,10 +29,10 @@ try {
         throw new Exception('Mesa no disponible');
     }
 
-    // Crear pedido
+    // Crear pedido (reemplazar `id_usuario` por `nombre_cliente`)
     $stmt = $conn->prepare("
-        INSERT INTO pedidos (id_usuario, id_mesa, nombre_cliente, fecha_pedido, estado, total)
-        VALUES (2, :id_mesa, :nombreCliente, NOW(), 'pendiente', :total)
+        INSERT INTO pedidos (id_mesa, nombre_cliente, fecha_pedido, estado, total)
+        VALUES (:id_mesa, :nombreCliente, NOW(), 'pendiente', :total)
     ");
 
     $stmt->execute([
@@ -54,7 +54,7 @@ try {
         ':idPedido' => $idPedido
     ]);
 
-    // Insertar detalles
+    // Insertar detalles del pedido
     $stmtDetalle = $conn->prepare("
         INSERT INTO detalle_pedidos (id_pedido, id_producto, cantidad, precio_unitario)
         VALUES (:idPedido, :idProducto, :cantidad, :precioUnitario)
@@ -69,7 +69,7 @@ try {
         ]);
     }
 
-    // Actualizar estado mesa
+    // Actualizar estado de la mesa
     $stmtUpdateMesa = $conn->prepare("UPDATE mesas SET estado = 'ocupada' WHERE id = ?");
     $stmtUpdateMesa->execute([$data['id_mesa']]);
 

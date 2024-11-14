@@ -330,6 +330,7 @@ function actualizarTablaRecetas() {
 
 
 
+
 // Función para cargar ingredientes
 function cargarIngredientes() {
     return fetch('api/obtener_productos.php')
@@ -343,35 +344,43 @@ function cargarIngredientes() {
         });
 }
 
-// Función para mostrar el formulario de receta
+function editarReceta(id) {
+    console.log(`Editando receta con ID: ${id}`); // Para depuración
+    mostrarFormularioReceta(id);
+}
+
 function mostrarFormularioReceta(id = null) {
     const modal = document.getElementById('modal-receta');
     const form = document.getElementById('form-receta');
     
-    // Limpiar la lista de ingredientes actual
+    // Limpiar el formulario y lista de ingredientes actual
+    form.reset();
     const listaIngredientes = document.getElementById('lista-ingredientes-receta');
     listaIngredientes.innerHTML = '';
-    
+
     // Cargar productos del menú
     fetch('api/obtener_productos_menu.php')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                const select = document.getElementById('producto-receta');
-                select.innerHTML = '<option value="">Seleccione un producto</option>';
+                const selectProducto = document.getElementById('producto-receta');
+                selectProducto.innerHTML = '<option value="">Seleccione un producto</option>';
                 data.productos.forEach(producto => {
-                    const selected = id && id === producto.id ? 'selected' : '';
-                    select.innerHTML += `
-                        <option value="${producto.id}" ${selected}>
+                    selectProducto.innerHTML += `
+                        <option value="${producto.id}">
                             ${producto.nombre} (${producto.categoria})
                         </option>
                     `;
                 });
 
-                // Si es edición, cargar los ingredientes existentes
+                // Si es edición, cargar la receta y sus ingredientes
                 if (id) {
                     const receta = recetasActuales.find(r => r.id_producto === id);
                     if (receta) {
+                        // Seleccionar el producto en el menú
+                        selectProducto.value = receta.id_producto;
+
+                        // Agregar los ingredientes existentes en el formulario
                         receta.ingredientes.forEach(ingrediente => {
                             agregarIngredienteAReceta(ingrediente);
                         });
@@ -387,7 +396,8 @@ function mostrarFormularioReceta(id = null) {
         });
 }
 
-// Función modificada para agregar ingrediente
+
+
 function agregarIngredienteAReceta(ingredienteExistente = null) {
     const listaIngredientes = document.getElementById('lista-ingredientes-receta');
     const div = document.createElement('div');
@@ -397,8 +407,7 @@ function agregarIngredienteAReceta(ingredienteExistente = null) {
         <select name="ingredientes[]" required class="flex-1 rounded-md border border-gray-300 px-3 py-2">
             <option value="">Seleccione ingrediente</option>
             ${ingredientesDisponibles.map(ing => `
-                <option value="${ing.id}" 
-                    ${ingredienteExistente && ing.id === ingredienteExistente.id ? 'selected' : ''}>
+                <option value="${ing.id}" ${ingredienteExistente && ing.id === ingredienteExistente.id ? 'selected' : ''}>
                     ${ing.nombre} (${ing.unidad})
                 </option>
             `).join('')}
@@ -420,6 +429,7 @@ function agregarIngredienteAReceta(ingredienteExistente = null) {
     
     listaIngredientes.appendChild(div);
 }
+
 
 
 // Función modificada para cargar recetas

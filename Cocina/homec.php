@@ -33,9 +33,9 @@
         </div>
     </nav>
 
-    <div class="max-w-5xl mx-auto px-4 py-12">
+    <div class="max-w-7xl mx-auto px-4 py-12">
         <!-- Tablero de Pedidos -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
             <!-- Pedidos Pendientes -->
             <div class="bg-light-steel p-6 rounded-lg shadow-lg text-center border border-steel">
                 <h3 class="text-lg font-bold text-red-600 mb-4">Pendientes</h3>
@@ -52,21 +52,22 @@
                 </div>
             </div>
 
-            <!-- Pedidos Listos -->
+            <!-- Pedidos Listos para Entregar -->
             <div class="bg-light-steel p-6 rounded-lg shadow-lg text-center border border-steel">
                 <h3 class="text-lg font-bold text-green-600 mb-4">Listos para Entregar</h3>
                 <div id="pedidos-listos" class="space-y-4">
                     <!-- Los pedidos listos se cargarán aquí -->
                 </div>
             </div>
-        </div>
 
-        <!-- Detalles del Pedido Seleccionado -->
-        <div class="bg-light-steel p-8 rounded-lg shadow-lg border border-steel mb-12">
-            <h3 class="text-lg font-bold text-steel-dark mb-4">Detalles del Pedido</h3>
-            <div id="detalle-pedido" class="space-y-4">
-                <!-- Los detalles del pedido seleccionado se mostrarán aquí -->
-            </div>
+           <!-- Pedidos Listos para Pagar -->
+<div class="bg-light-steel p-6 rounded-lg shadow-lg text-center border border-steel">
+    <h3 class="text-lg font-bold text-purple-600 mb-4">Listos para Pagar</h3>
+    <div id="pedidos-listos-para-pagar" class="space-y-4">
+        <!-- Los pedidos listos para pagar se cargarán aquí -->
+    </div>
+</div>
+
         </div>
     </div>
 

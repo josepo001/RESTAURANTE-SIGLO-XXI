@@ -60,68 +60,7 @@
     padding-bottom: 10px;
 }
 
-/* Estilo de la tabla de pedidos */
-.section table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-    background-color: #ffffff;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-.section table th,
-.section table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-.section table th {
-    background-color: #333;
-    color: #fff;
-    font-weight: bold;
-    text-align: center;
-}
-
-.section table tr:hover {
-    background-color: #f1f1f1;
-}
-
-.section table td {
-    text-align: center;
-}
-
-/* Select y campos de entrada en la tabla */
-.section table td select,
-.section table td input[type="number"] {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    width: 100%;
-}
-
-.section table td select:hover,
-.section table td input[type="number"]:hover {
-    border-color: #999;
-}
-
-/* Botón Guardar */
-.section table td button {
-    padding: 8px 12px;
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-}
-
-.section table td button:hover {
-    background-color: #218838;
-}
-/* Botón Agregar Pedido */
+/* Botones en la cabecera de sección */
 .section-header {
     display: flex;
     justify-content: space-between;
@@ -135,9 +74,9 @@
     color: #333;
 }
 
-.btn-agregar {
+/* Estilos para botones de acción */
+.btn-agregar-pedido, .btn-agregar-proveedor, .btn-eliminar-proveedor {
     padding: 10px 20px;
-    background-color: #007bff;
     color: #fff;
     text-decoration: none;
     border-radius: 5px;
@@ -145,8 +84,31 @@
     transition: background-color 0.3s ease;
 }
 
-.btn-agregar:hover {
+/* Botón Agregar Pedido */
+.btn-agregar-pedido {
+    background-color: #007bff; /* Azul */
+}
+
+.btn-agregar-pedido:hover {
     background-color: #0056b3;
+}
+
+/* Botón Agregar Proveedor */
+.btn-agregar-proveedor {
+    background-color: #28a745; /* Verde */
+}
+
+.btn-agregar-proveedor:hover {
+    background-color: #218838;
+}
+
+/* Botón Eliminar Proveedor */
+.btn-eliminar-proveedor {
+    background-color: #dc3545; /* Rojo */
+}
+
+.btn-eliminar-proveedor:hover {
+    background-color: #c82333;
 }
 
 /* Tabla de Pedidos */
@@ -188,6 +150,62 @@
     text-align: center;
 }
 
+/* Estilos específicos para los estados */
+.estado-pendiente {
+    background-color: #ffc107; /* Amarillo para "Pendiente" */
+    color: #fff;
+    font-weight: bold;
+}
+
+.estado-transito {
+    background-color: #17a2b8; /* Azul claro para "En tránsito" */
+    color: #fff;
+    font-weight: bold;
+}
+
+.estado-recibido {
+    background-color: #28a745; /* Verde para "Recibido" */
+    color: #fff;
+    font-weight: bold;
+}
+
+.estado-cancelado {
+    background-color: #dc3545; /* Rojo para "Cancelado" */
+    color: #fff;
+    font-weight: bold;
+}
+
+/* Botón Editar */
+.btn-editar {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.btn-editar:hover {
+    color: #0056b3;
+    text-decoration: none; /* Quitar subrayado */
+}
+
+/* Botón Eliminar */
+.btn-eliminar {
+    padding: 8px 12px;
+    background-color: #dc3545; /* Rojo para Eliminar */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn-eliminar:hover {
+    background-color: #c82333;
+}
+
+/* Opciones de los estados en la tabla */
 .pedidos-container table td select {
     padding: 8px;
     border: 1px solid #ccc;

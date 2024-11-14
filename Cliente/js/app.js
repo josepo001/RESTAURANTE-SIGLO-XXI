@@ -1,19 +1,23 @@
 let carrito = [];
 
+// Función para agregar un producto al carrito
 function agregarAlCarrito(producto) {
     carrito.push(producto);
     actualizarCarrito();
     mostrarCarrito();
 }
 
+// Función para actualizar el contenido del carrito en el DOM
 function actualizarCarrito() {
     const contador = document.getElementById('carrito-contador');
-    contador.textContent = carrito.length;
-    contador.classList.remove('hidden');
-
     const itemsCarrito = document.getElementById('items-carrito');
     const totalCarrito = document.getElementById('total-carrito');
 
+    // Actualizar el contador de elementos en el carrito
+    contador.textContent = carrito.length;
+    contador.classList.remove('hidden');
+
+    // Generar HTML para cada producto en el carrito
     itemsCarrito.innerHTML = carrito.map((item, index) => `
         <div class="flex justify-between items-center mb-2">
             <div>
@@ -24,14 +28,17 @@ function actualizarCarrito() {
         </div>
     `).join('');
 
+    // Calcular el total del carrito
     const total = carrito.reduce((sum, item) => sum + parseFloat(item.precio), 0);
     totalCarrito.textContent = `$${total.toFixed(2)}`;
 }
 
+// Función para mostrar el carrito
 function mostrarCarrito() {
     document.getElementById('carrito-flotante').classList.remove('hidden');
 }
 
+// Función para eliminar un producto del carrito
 function eliminarDelCarrito(index) {
     carrito.splice(index, 1);
     actualizarCarrito();
@@ -41,6 +48,7 @@ function eliminarDelCarrito(index) {
     }
 }
 
+// Función para confirmar el pedido
 function confirmarPedido(event) {
     event.preventDefault();
     
@@ -57,7 +65,7 @@ function confirmarPedido(event) {
         id: item.id,
         nombre: item.nombre,
         precio: item.precio,
-        cantidad: 1
+        cantidad: 1 // Ajustar según la cantidad que desees
     }));
 
     if (items.length === 0) {
@@ -71,8 +79,6 @@ function confirmarPedido(event) {
         id_mesa: parseInt(id_mesa),
         total: parseFloat(document.getElementById('total-carrito').textContent.slice(1))
     };
-
-    console.log('Enviando pedido:', pedido); // Para debug
 
     fetch('api/procesar_pedido.php', {
         method: 'POST',
@@ -90,15 +96,12 @@ function confirmarPedido(event) {
     .then(data => {
         if (data.success) {
             alert(`¡Pedido #${data.idPedido} creado exitosamente!`);
-            // Limpiar carrito y formulario
             carrito = [];
             actualizarCarrito();
             document.getElementById('carrito-flotante').classList.add('hidden');
             document.getElementById('nombre-cliente').value = '';
             document.getElementById('mesa-select').value = '';
             document.getElementById('carrito-contador').classList.add('hidden');
-            
-            // Recargar la página para actualizar las mesas disponibles
             location.reload();
         } else {
             alert(`Error al crear el pedido: ${data.error}`);
@@ -110,14 +113,11 @@ function confirmarPedido(event) {
     });
 }
 
+// Evento para mostrar el carrito cuando se hace clic en el ícono
 document.getElementById('carrito-icon').addEventListener('click', () => {
     const carritoFlotante = document.getElementById('carrito-flotante');
     carritoFlotante.classList.toggle('hidden');
 });
-
-
-
-
 
 
 // Cargar productos con verificación de disponibilidad

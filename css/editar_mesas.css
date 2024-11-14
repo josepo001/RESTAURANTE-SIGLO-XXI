@@ -1,4 +1,4 @@
-/* Estilos generales */
+/* General Reset */
 * {
     margin: 0;
     padding: 0;
@@ -13,10 +13,10 @@ body {
     justify-content: center;
     min-height: 100vh;
     background-color: #f5f5f5;
-    margin: 20px;
+    margin: 0;
 }
 
-/* Encabezado de la página */
+/* Título de la página */
 h1 {
     font-size: 2rem;
     color: #333;
@@ -24,17 +24,17 @@ h1 {
     text-align: center;
 }
 
-/* Estilos del formulario */
+/* Contenedor del formulario */
 .profile-form {
     background: #ffffff;
     padding: 20px 40px;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 500px;
 }
 
-/* Estilos de los grupos de formularios */
+/* Estilos para cada grupo de formulario */
 .form-group {
     margin-bottom: 15px;
 }
@@ -44,11 +44,11 @@ label {
     color: #555;
     margin-bottom: 5px;
     display: block;
+    font-weight: bold;
 }
 
 input[type="text"],
-input[type="email"],
-input[type="password"],
+input[type="number"],
 select {
     width: 100%;
     padding: 10px;
@@ -59,16 +59,15 @@ select {
 }
 
 input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus,
+input[type="number"]:focus,
 select:focus {
     border-color: #007bff;
     outline: none;
 }
 
-/* Estilos del botón de actualizar */
+/* Botón de Actualizar */
 .btn-actualizar {
-    flex: 1; /* Ocupa el mismo espacio que el botón cancelar */
+    width: 100%;
     padding: 10px;
     background-color: #007bff;
     color: #ffffff;
@@ -78,16 +77,17 @@ select:focus {
     cursor: pointer;
     transition: background-color 0.3s ease;
     text-align: center;
-    margin-right: 10px; /* Espacio entre el botón de actualizar y cancelar */
+    margin-top: 10px;
 }
 
 .btn-actualizar:hover {
     background-color: #0056b3;
 }
 
-/* Estilos del botón de cancelar */
+/* Botón de Cancelar */
 .btn-cancelar {
-    flex: 1; /* Ocupa el mismo espacio que el botón actualizar */
+    display: inline-block;
+    width: 100%;
     padding: 10px;
     color: #ffffff;
     background-color: #dc3545;
@@ -98,22 +98,22 @@ select:focus {
     cursor: pointer;
     transition: background-color 0.3s ease;
     text-align: center;
+    margin-top: 10px;
 }
 
 .btn-cancelar:hover {
     background-color: #c82333;
 }
 
-/* Centrando y separando los botones */
+/* Contenedor para centrar los botones y dar espacio entre ellos */
 .text-center {
     display: flex;
+    gap: 10px;
     justify-content: space-between;
-    gap: 10px; /* Espacio entre los botones */
-    margin-top: 10px;
-    width: 100%;
+    align-items: center;
 }
 
-/* Responsividad */
+/* Responsividad para pantallas pequeñas */
 @media (max-width: 480px) {
     .profile-form {
         padding: 20px;
@@ -125,10 +125,10 @@ select:focus {
 
     .text-center {
         flex-direction: column;
+        gap: 10px;
     }
 
     .btn-actualizar, .btn-cancelar {
         width: 100%;
-        margin: 5px 0; /* Espacio entre botones en vista móvil */
     }
 }

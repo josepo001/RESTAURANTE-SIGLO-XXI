@@ -77,10 +77,10 @@ try {
     <div class="form-group">
         <label for="tipoUsuario"><b>TIPO DE USUARIO</b></label>
         <select name="txtTipoUsuario" id="tipoUsuario">
-            <option value="admin" <?php echo (isset($user['tipo_usuario']) && $user['tipo_usuario'] == 'admin') ? 'selected' : ''; ?>>Admin</option>
-            <option value="Bodega" <?php echo (isset($user['tipo_usuario']) && $user['tipo_usuario'] == 'bodega') ? 'selected' : ''; ?>>Empleado</option>
-            <option value="cocina" <?php echo (isset($user['tipo_usuario']) && $user['tipo_usuario'] == 'cocina') ? 'selected' : ''; ?>>Empleado</option>
-            <option value="finanzas" <?php echo (isset($user['tipo_usuario']) && $user['tipo_usuario'] == 'fianazas') ? 'selected' : ''; ?>>Empleado</option>
+            <option value="administrador" <?php echo (isset($user['tipo_usuario']) && $user['tipo_usuario'] == 'admin') ? 'selected' : ''; ?>>Admin</option>
+            <option value="bodega" <?php echo (isset($user['tipo_usuario']) && $user['tipo_usuario'] == 'bodega') ? 'selected' : ''; ?>>Bodega</option>
+            <option value="cocina" <?php echo (isset($user['tipo_usuario']) && $user['tipo_usuario'] == 'cocina') ? 'selected' : ''; ?>>Cocina</option>
+            <option value="finanzas" <?php echo (isset($user['tipo_usuario']) && $user['tipo_usuario'] == 'fianazas') ? 'selected' : ''; ?>>Finanzas</option>
         </select>
     </div>
 

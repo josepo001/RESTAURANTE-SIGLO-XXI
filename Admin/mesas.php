@@ -32,17 +32,6 @@ try {
         die("Error: Usuario no encontrado.");
     }
 
-    // Procesar cambio de estado
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['accion'] === 'cambiar_estado') {
-        $id = $_POST['id'];
-        $nuevo_estado = $_POST['estado'];
-        $stmt = $db->prepare("UPDATE mesas SET estado = ? WHERE id = ?");
-        $stmt->bind_param("si", $nuevo_estado, $id);
-        $stmt->execute();
-        header("Location: mesas.php");
-        exit;
-    }
-
     // Filtrar mesas por búsqueda
     $search = isset($_GET['search']) ? $_GET['search'] : '';
     $query = "SELECT * FROM mesas";
@@ -76,7 +65,7 @@ try {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -138,7 +127,8 @@ try {
                     <th>Mesa</th>
                     <th>Capacidad</th>
                     <th>Estado</th>
-                    <th>Acciones</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
                 </tr>
             </thead>
             <tbody>
@@ -146,20 +136,14 @@ try {
                     <tr>
                         <td><?php echo htmlspecialchars($row['numero']); ?></td>
                         <td><?php echo htmlspecialchars($row['capacidad']); ?></td>
+                        <td><?php echo htmlspecialchars($row['estado']); ?></td>
                         <td>
-                            <form method="post" style="display:inline;">
-                                <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                <input type="hidden" name="accion" value="cambiar_estado">
-                                <select name="estado" onchange="this.form.submit()">
-                                    <option value="disponible" <?php if ($row['estado'] === 'disponible') echo 'selected'; ?>>Disponible</option>
-                                    <option value="ocupada" <?php if ($row['estado'] === 'ocupada') echo 'selected'; ?>>Ocupada</option>
-                                </select>
-                            </form>
+                            <a href="editar_mesa.php?id=<?php echo $row['id']; ?>" class="btn-editar">Editar</a>
                         </td>
                         <td>
-                            <form method="post" style="display:inline;">
+                            <form method="post" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta mesa?');">
                                 <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                <button type="submit" name="accion" value="eliminar">Eliminar</button>
+                                <button type="submit" name="accion" value="eliminar" class="btn-eliminar">Eliminar</button>
                             </form>
                         </td>
                     </tr>
@@ -169,7 +153,6 @@ try {
     </div>
 
     <script>
-        // Script para restablecer la búsqueda
         document.getElementById('clearButton').addEventListener('click', function(event) {
             event.preventDefault();
             document.getElementById('searchInput').value = '';

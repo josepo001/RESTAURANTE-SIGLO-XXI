@@ -57,6 +57,7 @@ h1 {
     margin: 20px;
     font-size: 24px;
     color: #333;
+    text-align: center;
 }
 
 /* Contenedor de búsqueda */
@@ -73,22 +74,23 @@ h1 {
 }
 
 #searchInput {
-    padding: 8px 12px;
-    width: 200px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    padding: 10px 15px;
+    width: 220px;
+    border: 2px solid #007bff;
+    border-radius: 8px;
     font-size: 14px;
 }
 
 #searchButton {
-    padding: 8px 15px;
+    padding: 10px 20px;
     background-color: #007bff;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
     font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
 #searchButton:hover {
@@ -96,14 +98,15 @@ h1 {
 }
 
 #clearButton {
-    padding: 8px 15px;
+    padding: 10px 20px;
     background-color: #6c757d;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     font-size: 14px;
     font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
 #clearButton:hover {
@@ -117,13 +120,15 @@ h1 {
 }
 
 .add-table-btn .button {
-    padding: 10px 20px;
+    padding: 12px 25px;
     background-color: #28a745;
     color: #fff;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 16px;
     font-weight: bold;
+    transition: background-color 0.3s ease;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .add-table-btn .button:hover {
@@ -131,16 +136,24 @@ h1 {
 }
 
 /* Tabla de mesas */
+.mesas-container {
+    display: flex;
+    justify-content: center;
+}
+
 .mesas-container table {
-    width: 90%;
+    width: 60%; /* Reduce el ancho de la tabla */
     margin: 20px auto;
     border-collapse: collapse;
-    background-color: #f9f9f9;
+    background-color: #f4f6f9;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .mesas-container table th,
 .mesas-container table td {
-    padding: 12px;
+    padding: 16px;
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
@@ -149,22 +162,52 @@ h1 {
     background-color: #333;
     color: #fff;
     font-weight: bold;
-}
-
-.mesas-container table tr:hover {
-    background-color: #f1f1f1;
-}
-
-.mesas-container table td button {
-    padding: 8px 12px;
-    background-color: #e74c3c;
-    color: #fff;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     font-size: 14px;
 }
 
-.mesas-container table td button:hover {
-    background-color: #c0392b;
+.mesas-container table tr:nth-child(even) {
+    background-color: #f2f4f7;
+}
+
+.mesas-container table tr:hover {
+    background-color: #e9ecef;
+}
+
+
+/* Estilo de los botones Editar y Eliminar en la tabla */
+.mesas-container .btn-editar,
+.mesas-container .btn-eliminar {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+}
+
+/* Botón Editar */
+.mesas-container .btn-editar {
+    background-color: #17a2b8;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-decoration: none; /* Quita el subrayado */
+    color: #fff; /* Asegura que el texto sea blanco */
+}
+
+.mesas-container .btn-editar:hover {
+    background-color: #138496;
+}
+
+
+/* Botón Eliminar */
+.mesas-container .btn-eliminar {
+    background-color: #dc3545;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.mesas-container .btn-eliminar:hover {
+    background-color: #c82333;
 }

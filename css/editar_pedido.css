@@ -1,0 +1,232 @@
+/* Estilos generales */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+}
+
+/* Encabezado */
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header .logo h2 {
+    font-size: 1.5rem;
+}
+
+.header .nav-menu ul {
+    list-style-type: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.header .nav-menu ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s;
+}
+
+.header .nav-menu ul li a:hover {
+    color: #ffa500; /* Color para resaltar al pasar el mouse */
+}
+
+/* Título de sección */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #ffa500;
+    color: #fff;
+    margin-bottom: 1rem;
+}
+
+.section-header h2 {
+    font-size: 1.8rem;
+}
+
+.section-header .btn-agregar-proveedor,
+.section-header .btn-agregar-pedido {
+    background-color: #333;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.section-header .btn-agregar-proveedor:hover,
+.section-header .btn-agregar-pedido:hover {
+    background-color: #444;
+}
+
+/* Contenedor de tabla de pedidos */
+.pedidos-container {
+    padding: 2rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+thead {
+    background-color: #333;
+    color: #fff;
+}
+
+thead th {
+    padding: 1rem;
+    font-weight: bold;
+    text-align: left;
+}
+
+tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody td {
+    padding: 1rem;
+}
+
+/* Estado del pedido */
+.estado-pendiente {
+    color: #d9534f; /* Rojo para pedidos pendientes */
+}
+
+.estado-en-preparacion {
+    color: #f0ad4e; /* Naranja para pedidos en preparación */
+}
+
+.estado-completado {
+    color: #5cb85c; /* Verde para pedidos completados */
+}
+
+.estado-cancelado {
+    color: #777; /* Gris para pedidos cancelados */
+}
+
+/* Botones de acción */
+.btn-editar, .btn-eliminar, .btn-guardar, .btn-cancelar {
+    padding: 0.4rem 0.8rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    color: #fff;
+}
+
+.btn-editar {
+    background-color: #5cb85c;
+}
+
+.btn-editar:hover {
+    background-color: #4cae4c;
+}
+
+.btn-eliminar {
+    background-color: #d9534f;
+}
+
+.btn-eliminar:hover {
+    background-color: #c9302c;
+}
+
+.btn-guardar {
+    background-color: #5bc0de;
+}
+
+.btn-guardar:hover {
+    background-color: #46b8da;
+}
+
+.btn-cancelar {
+    background-color: #777;
+    text-decoration: none;
+}
+
+.btn-cancelar:hover {
+    background-color: #5e5e5e;
+    color: #fff;
+}
+
+/* Formulario de edición */
+.container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.container h2 {
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.container label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.container input[type="text"],
+.container input[type="number"],
+.container input[type="datetime-local"],
+.container select {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .header .nav-menu ul {
+        flex-direction: column;
+    }
+
+    .section-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .section-header .btn-agregar-proveedor,
+    .section-header .btn-agregar-pedido {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.8rem;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+}

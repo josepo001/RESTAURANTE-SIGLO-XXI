@@ -64,7 +64,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Producto</title>
-    <link rel="stylesheet" href="../css/productos.css">
+    <link rel="stylesheet" href="../css/editar_productos.css">
 </head>
 <body>
     <h1>Editar Producto</h1>
@@ -86,7 +86,7 @@ try {
         </div>
         <div class="form-group">
             <label for="precio">Precio:</label>
-            <input type="number" id="precio" name="precio" step="0.01" value="<?php echo htmlspecialchars($producto['precio']); ?>" required>
+            <input type="number" id="precio" name="precio" step="1" value="<?php echo htmlspecialchars($producto['precio']); ?>" required>
         </div>
         <div class="form-group">
             <label for="stock">Stock:</label>

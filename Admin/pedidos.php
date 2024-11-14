@@ -28,6 +28,15 @@ try {
         exit;
     }
 
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion']) && $_POST['accion'] === 'eliminar') {
+        $id = $_POST['id'];
+        $stmt = $db->prepare("DELETE FROM pedidos_proveedores WHERE id = ?");
+        $stmt->bind_param("i", $id);
+        $stmt->execute();
+        header("Location: pedidos.php");
+        exit;
+    }
+    
     // Obtener lista de pedidos a proveedores
     $stmt = $db->prepare("
         SELECT pedidos_proveedores.id, pedidos_proveedores.fecha_pedido, pedidos_proveedores.estado,
@@ -43,9 +52,8 @@ try {
     die("Error al obtener información de los pedidos: " . $e->getMessage());
 }
 ?>
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,7 +68,6 @@ try {
             <div class="logo">
                 <h2>Restaurante Siglo XXI - Gestión de Pedidos a Proveedores</h2>
             </div>
-
             <nav class="nav-menu">
                 <ul>
                     <li><a href="homeAdmin.php"><i class="fas fa-tachometer-alt"></i> Inicio</a></li>
@@ -78,9 +85,11 @@ try {
     <!-- Título de la página y botón de agregar pedido -->
     <div class="section-header">
         <h2>Pedidos a Proveedores</h2>
-        <a href="agregar_proveedor.php" class="btn-agregar">Agregar Proveedor</a>
-        <a href="agregar_pedido.php" class="btn-agregar">Agregar Pedido</a>
+        <a href="agregar_proveedor.php" class="btn-agregar-proveedor">Agregar Proveedor</a>
+        <a href="agregar_pedido.php" class="btn-agregar-pedido">Agregar Pedido</a>
+        <a href="eliminar_proveedor.php" class="btn-eliminar-proveedor">Eliminar Proveedor</a>
     </div>
+
 
     <!-- Tabla de pedidos a proveedores -->
     <div class="pedidos-container">
@@ -92,31 +101,36 @@ try {
                     <th>Fecha</th>
                     <th>Estado</th>
                     <th>Total</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
                 </tr>
             </thead>
             <tbody>
-                <?php while ($row = $pedidos_proveedores->fetch_assoc()): ?>
-                    <tr>
-                        <td><?php echo htmlspecialchars($row['id']); ?></td>
-                        <td><?php echo htmlspecialchars($row['proveedor_nombre']); ?></td>
-                        <td><?php echo htmlspecialchars($row['fecha_pedido']); ?></td>
-                        <td>
-                            <form method="post" style="display:inline;">
-                                <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                <input type="hidden" name="accion" value="cambiar_estado_proveedor">
-                                <select name="estado" onchange="this.form.submit()">
-                                    <option value="pendiente" <?php if ($row['estado'] === 'pendiente') echo 'selected'; ?>>Pendiente</option>
-                                    <option value="en tránsito" <?php if ($row['estado'] === 'en tránsito') echo 'selected'; ?>>En tránsito</option>
-                                    <option value="recibido" <?php if ($row['estado'] === 'recibido') echo 'selected'; ?>>Recibido</option>
-                                    <option value="cancelado" <?php if ($row['estado'] === 'cancelado') echo 'selected'; ?>>Cancelado</option>
-                                </select>
-                            </form>
-                        </td>
-                        <td><?php echo htmlspecialchars(number_format($row['total'], 2)); ?></td>
-                    </tr>
-                <?php endwhile; ?>
-            </tbody>
+    <?php while ($row = $pedidos_proveedores->fetch_assoc()): ?>
+        <tr>
+            <td><?php echo htmlspecialchars($row['id']); ?></td>
+            <td><?php echo htmlspecialchars($row['proveedor_nombre']); ?></td>
+            <td><?php echo htmlspecialchars($row['fecha_pedido']); ?></td>
+            <td class="<?php echo 'estado-' . str_replace(' ', '-', strtolower($row['estado'])); ?>">
+                <?php echo ucfirst($row['estado']); ?>
+            </td>
+            <td><?php echo htmlspecialchars(number_format($row['total'], 2)); ?></td>
+            <td>
+                <a href="editar_pedido.php?id=<?php echo $row['id']; ?>" class="btn-editar">Editar</a>
+            </td>
+            <td>
+                <form method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este pedido?');" style="display:inline;">
+                    <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                    <input type="hidden" name="accion" value="eliminar">
+                    <button type="submit" class="btn-eliminar">Eliminar</button>
+                </form>
+            </td>
+        </tr>
+    <?php endwhile; ?>
+</tbody>
+
         </table>
     </div>
 </body>
 </html>
+
