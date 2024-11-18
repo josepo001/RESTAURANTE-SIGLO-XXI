@@ -6,7 +6,7 @@ const contenedoresEstados = {
     entregado: document.getElementById('pedidos-listos-para-pagar')
 };
 
-// Función para cargar todos los pedidos desde la API y actualizar el tablero completo
+// Función para cargar todos los pedidos desde la API
 function cargarPedidos() {
     fetch('../Cocina/api/obtener_pedidos.php')
         .then(response => response.json())
@@ -18,123 +18,108 @@ function cargarPedidos() {
         .catch(error => console.error('Error al cargar los pedidos:', error));
 }
 
-// Función para actualizar el tablero completo
+// Función para actualizar el tablero
 function actualizarTablero(pedidos) {
-    // Limpiar todos los contenedores de estado
     for (const contenedor in contenedoresEstados) {
         contenedoresEstados[contenedor].innerHTML = '';
     }
-
-    // Llenar cada contenedor con los pedidos correspondientes
     pedidos.forEach(pedido => {
         const pedidoElement = crearElementoPedido(pedido);
         contenedoresEstados[pedido.estado]?.appendChild(pedidoElement);
     });
 }
 
-// Función para crear el elemento visual de un pedido
+// Crear el elemento visual de un pedido
 function crearElementoPedido(pedido) {
     const div = document.createElement('div');
-    div.className = 'bg-gray-50 p-4 rounded-lg border hover:shadow-md transition-shadow cursor-pointer';
+    div.classList.add('card-pedido'); // Añade la clase CSS
     div.onclick = () => mostrarDetallesPedido(pedido);
 
-    let estadoClass = getEstadoClass(pedido.estado);
+    const estadoClass = getEstadoClass(pedido.estado);
 
     div.innerHTML = `
         <div class="flex justify-between items-start mb-2">
             <h4 class="font-bold">Pedido #${pedido.id}</h4>
-            <span class="text-sm ${estadoClass}">${pedido.tiempo_estimado || 0} min</span>
+            <span class="${estadoClass}">${pedido.tiempo_estimado || 0} min</span>
         </div>
-        <p class="text-sm text-gray-600 mb-2">Mesa ${pedido.id_mesa}</p>
-        <p class="text-sm text-gray-600 mb-2 font-semibold">Total: $${pedido.total || 0}</p>
-        <div class="space-y-1">
-            ${pedido.items.map(item => `
-                <div class="flex justify-between text-sm">
-                    <span>${item.cantidad}x ${item.nombre}</span>
-                </div>
-            `).join('')}
+        <p>Mesa ${pedido.id_mesa}</p>
+        <p><strong>Total: $${pedido.total || 0}</strong></p>
+        <div>
+            ${pedido.items.map(item => `<div>${item.cantidad}x ${item.nombre}</div>`).join('')}
         </div>
-        <div class="mt-4 flex justify-end space-x-2">
+        <div>
             ${crearBotonesAccion(pedido)}
         </div>
     `;
-
     return div;
 }
 
-// Función para obtener la clase de estilo según el estado
+// Obtener la clase de estilo según el estado
 function getEstadoClass(estado) {
     switch (estado) {
-        case 'pendiente': return 'text-red-600';
-        case 'en preparación': return 'text-yellow-600';
-        case 'completado': return 'text-green-600';
-        case 'entregado': return 'text-purple-600';
-        default: return 'text-gray-600';
+        case 'pendiente': return 'text-rojo';
+        case 'en preparación': return 'text-amarillo';
+        case 'completado': return 'text-verde';
+        case 'entregado': return 'text-morado';
+        default: return '';
     }
 }
 
-// Función para crear los botones de acción según el estado
+// Crear botones de acción
 function crearBotonesAccion(pedido) {
     switch (pedido.estado) {
         case 'pendiente':
-            return `<button onclick="actualizarEstadoPedido(${pedido.id}, 'en preparación')" 
-                    class="px-3 py-1 bg-yellow-500 text-white rounded">Iniciar Preparación</button>`;
+            return `<button onclick="actualizarEstadoPedido(${pedido.id}, 'en preparación')" class="btn btn-amarillo">Iniciar Preparación</button>`;
         case 'en preparación':
-            return `<button onclick="actualizarEstadoPedido(${pedido.id}, 'completado')" 
-                    class="px-3 py-1 bg-green-500 text-white rounded">Marcar Listo</button>`;
+            return `<button onclick="actualizarEstadoPedido(${pedido.id}, 'completado')" class="btn btn-verde">Marcar Listo</button>`;
         case 'completado':
-            return `<button onclick="actualizarEstadoPedido(${pedido.id}, 'entregado')" 
-                    class="px-3 py-1 bg-blue-500 text-white rounded">Entregado</button>`;
+            return `<button onclick="actualizarEstadoPedido(${pedido.id}, 'entregado')" class="btn btn-azul">Entregado</button>`;
         case 'entregado':
-            return `<button onclick="registrarPago(${pedido.id}, ${pedido.id_mesa}, ${pedido.total})" 
-                    class="px-3 py-1 bg-purple-500 text-white rounded">Pagar</button>`;
+            return `<button onclick="registrarPago(${pedido.id}, ${pedido.id_mesa}, ${pedido.total})" class="btn btn-morado">Pagar</button>`;
         default:
             return '';
     }
 }
 
-// Función para actualizar el estado de un pedido y refrescar el tablero completo
+// Actualizar el estado de un pedido
 function actualizarEstadoPedido(idPedido, nuevoEstado) {
     fetch('../Cocina/api/actualizar_estado_pedido.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id_pedido: idPedido, estado: nuevoEstado })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            cargarPedidos(); // Recargar pedidos justo después de cambiar el estado
-        } else {
-            alert('Error al actualizar el estado del pedido');
-        }
-    })
-    .catch(error => console.error('Error:', error));
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                cargarPedidos();
+            } else {
+                alert('Error al actualizar el estado');
+            }
+        })
+        .catch(error => console.error('Error:', error));
 }
 
-
-// Función para registrar el pago y refrescar el tablero completo
+// Registrar el pago
 function registrarPago(idPedido, idMesa, total) {
     fetch('../Cocina/api/registrar_pago.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id_pedido: idPedido, id_mesa: idMesa, total: total })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Pago registrado exitosamente');
-            cargarPedidos(); // Refrescar el tablero después de registrar el pago
-        } else {
-            alert('Error al registrar el pago: ' + data.error);
-        }
-    })
-    .catch(error => console.error('Error al registrar el pago:', error));
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Pago registrado exitosamente');
+                cargarPedidos();
+            } else {
+                alert('Error al registrar el pago');
+            }
+        })
+        .catch(error => console.error('Error:', error));
 }
 
-// Cargar pedidos inicialmente y actualizar cada 10 segundos para asegurar visibilidad
+// Cargar pedidos al iniciar y cada 10 segundos
 document.addEventListener('DOMContentLoaded', () => {
     cargarPedidos();
-    // Refresca la lista de pedidos cada 1 segundos
-setInterval(cargarPedidos, 1000);
-// Refresca la lista de pedidos cada 10 segundos
+    setInterval(cargarPedidos, 1000);
 });

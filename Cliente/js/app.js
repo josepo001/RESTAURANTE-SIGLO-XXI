@@ -15,27 +15,26 @@ function actualizarCarrito() {
 
     // Actualizar el contador de elementos en el carrito
     contador.textContent = carrito.length;
-    contador.classList.remove('hidden');
 
-    // Generar HTML para cada producto en el carrito
+    // Actualizar los items del carrito
     itemsCarrito.innerHTML = carrito.map((item, index) => `
-        <div class="flex justify-between items-center mb-2">
+        <div class="cart-item">
             <div>
-                <span class="font-medium">${item.nombre}</span>
-                <span class="text-gray-600 ml-2">$${item.precio}</span>
+                <span class="item-name">${item.nombre}</span>
+                <span class="item-price">$${item.precio}</span>
             </div>
-            <button onclick="eliminarDelCarrito(${index})" class="text-red-500 hover:text-red-700">×</button>
+            <button onclick="eliminarDelCarrito(${index})" class="remove-item">×</button>
         </div>
     `).join('');
 
-    // Calcular el total del carrito
+    // Calcular el total
     const total = carrito.reduce((sum, item) => sum + parseFloat(item.precio), 0);
     totalCarrito.textContent = `$${total.toFixed(2)}`;
 }
 
 // Función para mostrar el carrito
 function mostrarCarrito() {
-    document.getElementById('carrito-flotante').classList.remove('hidden');
+    document.getElementById('carrito-flotante').classList.add('show');
 }
 
 // Función para eliminar un producto del carrito
@@ -43,20 +42,18 @@ function eliminarDelCarrito(index) {
     carrito.splice(index, 1);
     actualizarCarrito();
     if (carrito.length === 0) {
-        document.getElementById('carrito-flotante').classList.add('hidden');
-        document.getElementById('carrito-contador').classList.add('hidden');
+        document.getElementById('carrito-flotante').classList.remove('show');
     }
 }
 
 // Función para confirmar el pedido
 function confirmarPedido(event) {
     event.preventDefault();
-    
-    const nombreCliente = document.getElementById('nombre-cliente').value;
-    const mesaSelect = document.getElementById('mesa-select');
-    const id_mesa = mesaSelect.value;
 
-    if (!nombreCliente || !id_mesa) {
+    const nombreCliente = document.getElementById('nombre-cliente').value;
+    const mesaSelect = document.getElementById('mesa-select').value;
+
+    if (!nombreCliente || !mesaSelect) {
         alert('Por favor complete todos los campos');
         return;
     }
@@ -65,7 +62,7 @@ function confirmarPedido(event) {
         id: item.id,
         nombre: item.nombre,
         precio: item.precio,
-        cantidad: 1 // Ajustar según la cantidad que desees
+        cantidad: 1
     }));
 
     if (items.length === 0) {
@@ -76,7 +73,7 @@ function confirmarPedido(event) {
     const pedido = {
         nombreCliente: nombreCliente,
         items: items,
-        id_mesa: parseInt(id_mesa),
+        id_mesa: parseInt(mesaSelect),
         total: parseFloat(document.getElementById('total-carrito').textContent.slice(1))
     };
 
@@ -98,11 +95,9 @@ function confirmarPedido(event) {
             alert(`¡Pedido #${data.idPedido} creado exitosamente!`);
             carrito = [];
             actualizarCarrito();
-            document.getElementById('carrito-flotante').classList.add('hidden');
+            document.getElementById('carrito-flotante').classList.remove('show');
             document.getElementById('nombre-cliente').value = '';
             document.getElementById('mesa-select').value = '';
-            document.getElementById('carrito-contador').classList.add('hidden');
-            location.reload();
         } else {
             alert(`Error al crear el pedido: ${data.error}`);
         }
@@ -116,50 +111,45 @@ function confirmarPedido(event) {
 // Evento para mostrar el carrito cuando se hace clic en el ícono
 document.getElementById('carrito-icon').addEventListener('click', () => {
     const carritoFlotante = document.getElementById('carrito-flotante');
-    carritoFlotante.classList.toggle('hidden');
+    carritoFlotante.classList.toggle('show');
 });
 
-
-// Cargar productos con verificación de disponibilidad
+// Función para cargar productos con verificación de disponibilidad
 function cargarProductos(categoria = 'todos') {
     fetch('api/productos.php')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                const productos = data.productos.filter(p => 
+                const productos = data.productos.filter(p =>
                     categoria === 'todos' || p.categoria === categoria
                 );
-                
+
                 const contenedor = document.getElementById('productos-container');
                 contenedor.innerHTML = '';
 
                 productos.forEach(producto => {
                     const card = document.createElement('div');
-                    card.className = 'producto-card mb-6';
-                    
+                    card.className = 'producto-card';
+
                     card.innerHTML = `
-                        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                            <img src="${producto.imagen}" alt="${producto.nombre}" 
-                                 class="w-full h-48 object-cover">
-                            <div class="p-4">
-                                <div class="flex justify-between items-start">
-                                    <h3 class="text-xl font-bold">${producto.nombre}</h3>
+                        <div class="card-hover">
+                            <img src="${producto.imagen}" alt="${producto.nombre}" class="card-image">
+                            <div class="card-body">
+                                <div class="card-header">
+                                    <h3>${producto.nombre}</h3>
                                     ${!producto.disponible ? 
-                                        '<span class="px-2 py-1 bg-red-100 text-red-800 text-sm rounded-full">No Disponible</span>' 
-                                        : ''
+                                        '<span class="not-available">No Disponible</span>' : ''
                                     }
                                 </div>
-                                <p class="text-gray-600 mt-2">${producto.descripcion}</p>
-                                <div class="mt-4 flex justify-between items-center">
-                                    <span class="text-xl font-bold">$${producto.precio}</span>
+                                <p>${producto.descripcion}</p>
+                                <div class="card-footer">
+                                    <span class="precio">$${producto.precio}</span>
                                     ${producto.disponible ? 
-                                        `<button onclick="agregarAlCarrito(${JSON.stringify(producto).replace(/"/g, '&quot;')})" 
-                                                 class="bg-[#8B4513] text-white px-4 py-2 rounded hover:bg-amber-700 transition-colors">
+                                        `<button onclick="agregarAlCarrito(${JSON.stringify(producto).replace(/"/g, '&quot;')})" class="btn-agregar">
                                             Agregar al pedido
                                          </button>`
                                         :
-                                        `<button disabled 
-                                                 class="bg-gray-300 text-gray-500 px-4 py-2 rounded cursor-not-allowed">
+                                        `<button class="btn-disabled" disabled>
                                             No disponible
                                          </button>`
                                     }
@@ -167,7 +157,7 @@ function cargarProductos(categoria = 'todos') {
                             </div>
                         </div>
                     `;
-                    
+
                     contenedor.appendChild(card);
                 });
             }
@@ -177,6 +167,7 @@ function cargarProductos(categoria = 'todos') {
             alert('Error al cargar los productos');
         });
 }
+
 
 function agregarAlCarrito(producto) {
     // Verificar disponibilidad antes de agregar al carrito
