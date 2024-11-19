@@ -12,11 +12,15 @@ try {
 
     $query = "
         SELECT 
-            pp.*,
-            p.nombre as proveedor_nombre,
+            pp.id,
+            pp.id_proveedor,
+            pp.fecha_pedido,
+            pp.estado,
+            pp.total,
+            p.nombre AS proveedor_nombre,
             p.contacto,
             p.telefono,
-            i.nombre as producto_nombre,
+            i.nombre AS producto_nombre,
             pp_i.cantidad,
             pp_i.precio_unitario
         FROM pedidos_proveedores pp
@@ -25,24 +29,27 @@ try {
         LEFT JOIN ingredientes i ON pp_i.id_producto = i.id
         ORDER BY pp.fecha_pedido DESC
     ";
-    
+
     $stmt = $conn->query($query);
     $pedidos = [];
-    
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        // Si el pedido aún no existe en el array, inicialízalo
         if (!isset($pedidos[$row['id']])) {
             $pedidos[$row['id']] = [
                 'id' => $row['id'],
-                'proveedor_nombre' => $row['proveedor_nombre'],
-                'contacto' => $row['contacto'],
-                'telefono' => $row['telefono'],
+                'proveedor_nombre' => $row['proveedor_nombre'] ?? 'Sin Nombre',
+                'contacto' => $row['contacto'] ?? 'N/A',
+                'telefono' => $row['telefono'] ?? 'N/A',
                 'fecha_pedido' => $row['fecha_pedido'],
                 'estado' => $row['estado'],
                 'total' => $row['total'],
                 'productos' => []
             ];
         }
-        if ($row['producto_nombre']) {
+
+        // Agregar producto solo si existe
+        if (!empty($row['producto_nombre'])) {
             $pedidos[$row['id']]['productos'][] = [
                 'nombre' => $row['producto_nombre'],
                 'cantidad' => $row['cantidad'],
@@ -53,13 +60,12 @@ try {
 
     echo json_encode([
         'success' => true,
-        'pedidos' => array_values($pedidos)
+        'pedidos' => array_values($pedidos) // Convertir a array indexado
     ]);
 
-} catch(PDOException $e) {
+} catch (PDOException $e) {
     echo json_encode([
         'success' => false,
         'message' => 'Error al obtener pedidos: ' . $e->getMessage()
     ]);
 }
-?>

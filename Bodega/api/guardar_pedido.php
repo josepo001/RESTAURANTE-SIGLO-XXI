@@ -2,12 +2,7 @@
 header('Content-Type: application/json');
 
 try {
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    if (!isset($data['id_proveedor']) || !isset($data['items'])) {
-        throw new Exception('Faltan datos requeridos');
-    }
-
+    // Conexión a la base de datos
     $host = 'localhost';
     $dbname = 'ene';
     $username = 'root';
@@ -16,40 +11,62 @@ try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $conn->beginTransaction();
+    // Decodificar la entrada JSON
+    $input = json_decode(file_get_contents('php://input'), true);
 
-    // Insertar pedido
-    $stmt = $conn->prepare("
-        INSERT INTO pedidos_proveedores (id_proveedor, fecha_pedido, estado, total)
-        VALUES (:id_proveedor, NOW(), 'pendiente', :total)
-    ");
-
-    $total = array_sum(array_map(function($item) {
-        return $item['cantidad'] * $item['precio'];
-    }, $data['items']));
-
-    $stmt->execute([
-        ':id_proveedor' => $data['id_proveedor'],
-        ':total' => $total
-    ]);
-
-    $idPedido = $conn->lastInsertId();
-
-    $conn->commit();
-
-    echo json_encode([
-        'success' => true,
-        'idPedido' => $idPedido,
-        'mensaje' => 'Pedido guardado correctamente'
-    ]);
-
-} catch(Exception $e) {
-    if (isset($conn)) {
-        $conn->rollBack();
+    // Validar que la entrada tenga los datos necesarios
+    if (!isset($input['id_proveedor'], $input['productos']) || !is_array($input['productos'])) {
+        throw new Exception('Datos incompletos o inválidos');
     }
-    echo json_encode([
-        'success' => false,
-        'error' => $e->getMessage()
-    ]);
+
+    // Asignar estado (predeterminado: "pendiente")
+    $estado = $input['estado'] ?? 'pendiente';
+
+    // Modo edición o creación
+    if (isset($input['id']) && !empty($input['id'])) {
+        // Edición: Actualizar pedido existente
+        $stmt = $conn->prepare("UPDATE pedidos_proveedores SET id_proveedor = ?, estado = ? WHERE id = ?");
+        $stmt->execute([$input['id_proveedor'], $estado, $input['id']]);
+    } else {
+        // Creación: Insertar un nuevo pedido
+        $stmt = $conn->prepare("INSERT INTO pedidos_proveedores (id_proveedor, estado, total) VALUES (?, ?, 0)");
+        $stmt->execute([$input['id_proveedor'], $estado]);
+        $input['id'] = $conn->lastInsertId(); // Obtener el ID del nuevo pedido
+    }
+
+    // Eliminar productos asociados al pedido anterior (si existen)
+    $stmt = $conn->prepare("DELETE FROM detalle_pedidos WHERE id_pedido = ?");
+    $stmt->execute([$input['id']]);
+
+    // Calcular el nuevo total del pedido
+    $total = 0;
+
+    // Insertar los nuevos productos
+    $stmt = $conn->prepare("INSERT INTO detalle_pedidos (id_pedido, id_producto, cantidad, precio_unitario) VALUES (?, ?, ?, ?)");
+    foreach ($input['productos'] as $producto) {
+        if (!isset($producto['id_producto'], $producto['cantidad'], $producto['precio_unitario'])) {
+            throw new Exception('Datos del producto incompletos');
+        }
+
+        // Insertar el producto en la tabla detalle_pedidos
+        $stmt->execute([
+            $input['id'],
+            $producto['id_producto'],
+            $producto['cantidad'],
+            $producto['precio_unitario']
+        ]);
+
+        // Sumar al total
+        $total += $producto['cantidad'] * $producto['precio_unitario'];
+    }
+
+    // Actualizar el total en la tabla pedidos_proveedores
+    $stmt = $conn->prepare("UPDATE pedidos_proveedores SET total = ? WHERE id = ?");
+    $stmt->execute([$total, $input['id']]);
+
+    // Responder con éxito
+    echo json_encode(['success' => true]);
+} catch (Exception $e) {
+    // Responder con un mensaje de error
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
-?>

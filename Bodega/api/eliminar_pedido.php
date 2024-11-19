@@ -2,12 +2,7 @@
 header('Content-Type: application/json');
 
 try {
-    $data = json_decode(file_get_contents('php://input'), true);
-    
-    if (!isset($data['id'])) {
-        throw new Exception('ID de pedido no proporcionado');
-    }
-
+    // Conexión a la base de datos
     $host = 'localhost';
     $dbname = 'ene';
     $username = 'root';
@@ -16,30 +11,26 @@ try {
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    $conn->beginTransaction();
-    
-    // Primero eliminar los detalles del pedido
-    $stmt = $conn->prepare("DELETE FROM detalle_pedidos WHERE id_pedido = :id");
-    $stmt->execute([':id' => $data['id']]);
+    // Leer los datos enviados en la solicitud (esperando el ID del pedido)
+    $input = json_decode(file_get_contents('php://input'), true);
 
-    // Luego eliminar el pedido
-    $stmt = $conn->prepare("DELETE FROM pedidos_proveedores WHERE id = :id");
-    $stmt->execute([':id' => $data['id']]);
-
-    $conn->commit();
-
-    echo json_encode([
-        'success' => true,
-        'message' => 'Pedido eliminado correctamente'
-    ]);
-
-} catch(Exception $e) {
-    if (isset($conn)) {
-        $conn->rollBack();
+    // Validar que el ID del pedido sea proporcionado
+    if (!isset($input['id']) || empty($input['id'])) {
+        throw new Exception('ID de pedido no proporcionado');
     }
-    echo json_encode([
-        'success' => false,
-        'message' => $e->getMessage()
-    ]);
+
+    // Eliminar primero los productos relacionados en la tabla detalle_pedidos
+    $stmt = $conn->prepare("DELETE FROM detalle_pedidos WHERE id_pedido = ?");
+    $stmt->execute([$input['id']]);
+
+    // Luego eliminar el pedido en la tabla pedidos_proveedores
+    $stmt = $conn->prepare("DELETE FROM pedidos_proveedores WHERE id = ?");
+    $stmt->execute([$input['id']]);
+
+    // Respuesta exitosa
+    echo json_encode(['success' => true]);
+
+} catch (Exception $e) {
+    // Manejar errores y responder con mensaje
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
 }
-?>

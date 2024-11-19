@@ -6,18 +6,20 @@ try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Consulta para obtener únicamente ID y nombre
-    $stmt = $pdo->query("SELECT id, nombre, descripcion, categoria FROM productos ORDER BY nombre");
-    $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Consulta para obtener todos los ingredientes
+    $sql = "SELECT id, nombre, unidad, stock FROM ingredientes ORDER BY nombre";
+    $stmt = $pdo->query($sql);
+    $ingredientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode([
         'success' => true,
-        'products' => $productos
+        'ingredientes' => $ingredientes
     ]);
+
 } catch (PDOException $e) {
     echo json_encode([
         'success' => false,
-        'message' => 'Error al obtener productos del menú: ' . $e->getMessage()
+        'message' => 'Error al obtener ingredientes: ' . $e->getMessage()
     ]);
 }
 ?>

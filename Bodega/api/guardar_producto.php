@@ -6,8 +6,11 @@ header('Content-Type: application/json');
 try {
     require_once '../config/database.php';
 
+    // Leer los datos del cuerpo de la solicitud (JSON)
+    $data = json_decode(file_get_contents('php://input'), true);
+
     // Verificar que todos los campos necesarios estén presentes
-    if (!isset($_POST['nombre']) || !isset($_POST['stock']) || !isset($_POST['stock_minimo']) || !isset($_POST['unidad'])) {
+    if (!isset($data['nombre']) || !isset($data['stock']) || !isset($data['stock_minimo']) || !isset($data['unidad'])) {
         throw new Exception('Faltan datos requeridos');
     }
 
@@ -15,10 +18,10 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     // Sanitizar y validar datos
-    $nombre = trim($_POST['nombre']);
-    $stock = intval($_POST['stock']);
-    $unidad = trim($_POST['unidad']);
-    $stock_minimo = intval($_POST['stock_minimo']);
+    $nombre = trim($data['nombre']);
+    $stock = intval($data['stock']);
+    $unidad = trim($data['unidad']);
+    $stock_minimo = intval($data['stock_minimo']);
 
     // Verificar valores válidos
     if (empty($nombre) || $stock < 0 || $stock_minimo < 0) {
@@ -34,17 +37,16 @@ try {
 
     try {
         if ($existe) {
-            // Actualizar
+            // Actualizar (sin la columna "cantidad")
             $sql = "UPDATE ingredientes 
-                    SET cantidad = :stock,
-                        stock = :stock,
+                    SET stock = :stock,
                         unidad = :unidad,
                         stock_minimo = :stock_minimo
                     WHERE nombre = :nombre";
         } else {
-            // Insertar nuevo
-            $sql = "INSERT INTO ingredientes (nombre, cantidad, stock, unidad, stock_minimo) 
-                    VALUES (:nombre, :stock, :stock, :unidad, :stock_minimo)";
+            // Insertar nuevo (sin la columna "cantidad")
+            $sql = "INSERT INTO ingredientes (nombre, stock, unidad, stock_minimo) 
+                    VALUES (:nombre, :stock, :unidad, :stock_minimo)";
         }
 
         $stmt = $pdo->prepare($sql);

@@ -8,7 +8,7 @@ try {
 
     // Obtener datos del POST
     $formData = json_decode(file_get_contents('php://input'), true);
-    
+
     // Log para debugging
     error_log('Datos recibidos: ' . print_r($formData, true));
 
@@ -20,30 +20,72 @@ try {
     $pdo->beginTransaction();
 
     try {
-        // Primero eliminar la receta existente si existe
-        $stmt = $pdo->prepare("DELETE FROM recetas WHERE id_producto = ?");
-        $stmt->execute([$formData['id_producto']]);
+        // Consulta para verificar si la receta ya existe
+        $stmtVerificar = $pdo->prepare("SELECT COUNT(*) FROM recetas WHERE id_producto = :id_producto");
+        $stmtVerificar->execute([':id_producto' => $formData['id_producto']]);
+        $existeReceta = $stmtVerificar->fetchColumn() > 0;
 
-        // Preparar la consulta para insertar ingredientes
-        $stmt = $pdo->prepare("
-            INSERT INTO recetas (id_producto, id_ingrediente, cantidad) 
-            VALUES (:id_producto, :id_ingrediente, :cantidad)
-        ");
+        if ($existeReceta) {
+            // Actualizar receta existente
+            foreach ($formData['ingredientes'] as $ingrediente) {
+                if (!isset($ingrediente['id']) || !isset($ingrediente['cantidad'])) {
+                    throw new Exception('Datos de ingrediente incompletos');
+                }
 
-        // Insertar cada ingrediente
-        foreach ($formData['ingredientes'] as $ingrediente) {
-            if (!isset($ingrediente['id']) || !isset($ingrediente['cantidad'])) {
-                throw new Exception('Datos de ingrediente incompletos');
+                // Verificar si el ingrediente ya existe en la receta
+                $stmtVerificarIngrediente = $pdo->prepare("
+                    SELECT COUNT(*) 
+                    FROM recetas 
+                    WHERE id_producto = :id_producto AND id_ingrediente = :id_ingrediente
+                ");
+                $stmtVerificarIngrediente->execute([
+                    ':id_producto' => $formData['id_producto'],
+                    ':id_ingrediente' => $ingrediente['id']
+                ]);
+
+                $existeIngrediente = $stmtVerificarIngrediente->fetchColumn() > 0;
+
+                if ($existeIngrediente) {
+                    // Actualizar ingrediente existente
+                    $stmtActualizar = $pdo->prepare("
+                        UPDATE recetas 
+                        SET cantidad = :cantidad 
+                        WHERE id_producto = :id_producto AND id_ingrediente = :id_ingrediente
+                    ");
+                    $stmtActualizar->execute([
+                        ':id_producto' => $formData['id_producto'],
+                        ':id_ingrediente' => $ingrediente['id'],
+                        ':cantidad' => $ingrediente['cantidad']
+                    ]);
+                } else {
+                    // Insertar nuevo ingrediente para la receta existente
+                    $stmtInsertarIngrediente = $pdo->prepare("
+                        INSERT INTO recetas (id_producto, id_ingrediente, cantidad) 
+                        VALUES (:id_producto, :id_ingrediente, :cantidad)
+                    ");
+                    $stmtInsertarIngrediente->execute([
+                        ':id_producto' => $formData['id_producto'],
+                        ':id_ingrediente' => $ingrediente['id'],
+                        ':cantidad' => $ingrediente['cantidad']
+                    ]);
+                }
             }
+        } else {
+            // Insertar nueva receta con todos los ingredientes
+            $stmtInsertar = $pdo->prepare("
+                INSERT INTO recetas (id_producto, id_ingrediente, cantidad) 
+                VALUES (:id_producto, :id_ingrediente, :cantidad)
+            ");
+            foreach ($formData['ingredientes'] as $ingrediente) {
+                if (!isset($ingrediente['id']) || !isset($ingrediente['cantidad'])) {
+                    throw new Exception('Datos de ingrediente incompletos');
+                }
 
-            $resultado = $stmt->execute([
-                ':id_producto' => $formData['id_producto'],
-                ':id_ingrediente' => $ingrediente['id'],
-                ':cantidad' => $ingrediente['cantidad']
-            ]);
-
-            if (!$resultado) {
-                throw new Exception('Error al insertar ingrediente');
+                $stmtInsertar->execute([
+                    ':id_producto' => $formData['id_producto'],
+                    ':id_ingrediente' => $ingrediente['id'],
+                    ':cantidad' => $ingrediente['cantidad']
+                ]);
             }
         }
 
@@ -51,14 +93,12 @@ try {
 
         echo json_encode([
             'success' => true,
-            'message' => 'Receta guardada correctamente'
+            'message' => $existeReceta ? 'Receta actualizada correctamente' : 'Receta guardada correctamente'
         ]);
-
     } catch (Exception $e) {
         $pdo->rollBack();
         throw $e;
     }
-
 } catch (Exception $e) {
     error_log('Error en guardar_receta.php: ' . $e->getMessage());
     echo json_encode([
