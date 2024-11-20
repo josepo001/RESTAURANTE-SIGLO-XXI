@@ -1,50 +1,62 @@
 <?php
-require_once '../Admin/DB.php'; // Asegúrate de que la ruta sea correcta
+session_start();
+require_once '../Admin/DB.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_POST['txtID'];
-    $nombre = $_POST['txtNombre'];
-    $email = $_POST['txtEmail'];
-    $password = $_POST['txtPassword'];
-    $rol = $_POST['txtTipoUsuario'];
+    $userId = $_POST['user_id']; // ID del usuario enviado desde el formulario
+    $nombre = $_POST['nombre'] ?? '';
+    $email = $_POST['email'] ?? '';
+    $password = $_POST['password'] ?? ''; // Contraseña opcional
 
     try {
-        $db = getDB(); // Obtener conexión a la base de datos
+        $db = getDB(); // Conexión a la base de datos
 
-        // Actualizar el usuario con o sin contraseña
+        // Validar campos obligatorios
+        if (empty($nombre) || empty($email)) {
+            throw new Exception("Nombre y correo son campos obligatorios.");
+        }
+
+        // Determinar si se proporcionó una nueva contraseña
         if (!empty($password)) {
-            // Si se proporciona una nueva contraseña, encriptarla y actualizar
-            $stmt = $db->prepare("UPDATE usuarios SET nombre = ?, email = ?, contraseña = ?, rol = ? WHERE id = ?");
-            if (!$stmt) {
-                throw new Exception("Error en la preparación de la consulta: " . $db->error);
-            }
+            // Encriptar la nueva contraseña
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $stmt->bind_param("ssssi", $nombre, $email, $hashedPassword, $rol, $id);
-        } else {
-            // Si no se proporciona una nueva contraseña, actualizar sin cambiar la contraseña
-            $stmt = $db->prepare("UPDATE usuarios SET nombre = ?, email = ?, rol = ? WHERE id = ?");
+
+            // Preparar consulta para actualizar incluyendo la contraseña
+            $stmt = $db->prepare("UPDATE usuarios SET nombre = ?, email = ?, contraseña = ? WHERE id = ?");
             if (!$stmt) {
                 throw new Exception("Error en la preparación de la consulta: " . $db->error);
             }
-            $stmt->bind_param("sssi", $nombre, $email, $rol, $id);
+            $stmt->bind_param("sssi", $nombre, $email, $hashedPassword, $userId);
+        } else {
+            // Preparar consulta para actualizar sin cambiar la contraseña
+            $stmt = $db->prepare("UPDATE usuarios SET nombre = ?, email = ? WHERE id = ?");
+            if (!$stmt) {
+                throw new Exception("Error en la preparación de la consulta: " . $db->error);
+            }
+            $stmt->bind_param("ssi", $nombre, $email, $userId);
         }
 
         // Ejecutar la consulta
         if ($stmt->execute()) {
-            // Redirigir con mensaje de éxito
-            header('Location: usuarios.php?success=Usuario actualizado correctamente');
+            if ($stmt->affected_rows > 0) {
+                // Redirigir con mensaje de éxito si hubo cambios
+                header('Location: perfilAdmin.php?success=Perfil actualizado correctamente');
+            } else {
+                // Redirigir con mensaje si no hubo cambios
+                header('Location: perfilAdmin.php?error=No se realizaron cambios en el perfil');
+            }
             exit;
         } else {
             throw new Exception("Error al ejecutar la consulta: " . $stmt->error);
         }
     } catch (Exception $e) {
         // Redirigir con mensaje de error
-        header('Location: usuarios.php?error=' . urlencode("Error al actualizar el usuario: " . $e->getMessage()));
+        header('Location: perfilAdmin.php?error=' . urlencode("Error al actualizar el perfil: " . $e->getMessage()));
         exit;
     }
 } else {
-    // Redirigir si no se envía mediante POST
-    header('Location: usuarios.php?error=' . urlencode("Método de solicitud no permitido"));
+    // Si no es una solicitud POST, redirigir al formulario
+    header('Location: perfilAdmin.php?error=' . urlencode("Método de solicitud no permitido."));
     exit;
 }
 ?>

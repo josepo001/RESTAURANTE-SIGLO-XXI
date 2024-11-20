@@ -39,7 +39,7 @@ try {
     <header class="header">
         <div class="header-content">
             <div class="logo">
-                <h2>Restaurante Siglo XXI </h2>
+                <h2>Restaurante Siglo XXI</h2>
             </div>
             <nav class="nav-menu">
                 <ul>
@@ -57,7 +57,6 @@ try {
                 <i class="fas fa-user-circle" style="font-size: 24px; margin-right: 8px;"></i>
                 <span>
                     <?php echo htmlspecialchars($user['nombre'] ?? ''); ?>
-                    
                 </span>
                 <br>
                 <small><?php echo htmlspecialchars(ucfirst($user['rol'] ?? '')); ?></small>
@@ -67,7 +66,21 @@ try {
 
     <div class="main-content">
         <h1>Mi Perfil</h1>
+
+        <!-- Mensajes de éxito o error -->
+        <?php if (isset($_GET['success'])): ?>
+            <div class="mensaje">
+                <?php echo htmlspecialchars($_GET['success']); ?>
+            </div>
+        <?php elseif (isset($_GET['error'])): ?>
+            <div class="mensaje-error">
+                <?php echo htmlspecialchars($_GET['error']); ?>
+            </div>
+        <?php endif; ?>
+
+        <!-- Formulario -->
         <form action="procesar_editar.php" method="POST">
+            <input type="hidden" name="user_id" value="<?php echo htmlspecialchars($_SESSION['user_id']); ?>">
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($user['nombre'] ?? ''); ?>" required>
             <br>
@@ -82,3 +95,4 @@ try {
     </div>
 </body>
 </html>
+
