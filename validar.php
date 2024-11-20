@@ -3,65 +3,77 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 session_start();
-require_once 'Admin/DB.php'; // Asegúrate de que esta función conecta correctamente a la base de datos
+require_once 'Admin/DB.php'; // Asegúrate de que esta ruta es correcta
 
-// Si la solicitud es POST, intentamos iniciar sesión
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = trim($_POST['email'] ?? ''); // Capturamos el email y eliminamos espacios
-    $password = $_POST['password'] ?? ''; // Capturamos la contraseña
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = trim($_POST['email'] ?? ''); // Capturar el email y eliminar espacios
+    $password = $_POST['password'] ?? ''; // Capturar la contraseña
 
     try {
-        // Obtener la conexión a la base de datos
+        // Conexión a la base de datos
         $db = getDB();
-        
-        // Preparamos una consulta para encontrar al usuario según el email
+
+        // Consulta para obtener el usuario por email
         $stmt = $db->prepare("SELECT * FROM usuarios WHERE email = ?");
-        $stmt->bind_param("s", $email); // Vinculamos el parámetro
+        if (!$stmt) {
+            throw new Exception("Error al preparar la consulta: " . $db->error);
+        }
+
+        $stmt->bind_param("s", $email); // Vincular el email como parámetro
         $stmt->execute();
         $result = $stmt->get_result();
-        $user = $result->fetch_assoc(); // Obtenemos el resultado como un array asociativo
 
-        // Si el usuario existe y la contraseña es correcta (sin encriptación por ahora)
-        if ($user && $password === $user['contraseña']) { // Cambiar a password_verify cuando las contraseñas estén encriptadas
-            // Guardar la información relevante en la sesión
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_role'] = $user['rol'];
-            $_SESSION['user_name'] = $user['nombre'];
+        // Verificar si el usuario existe
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc(); // Obtener los datos del usuario
 
-            // Redirigir al usuario según su rol
-            switch ($user['rol']) {
-                case 'administrador':
-                    header('Location: Admin/homeAdmin.php');
-                    break;
-                case 'bodega':
-                    header('Location: Bodega/homeb.php');
-                    break;
-                case 'finanzas':
-                    header('Location: Finanzas/homef.php');
-                    break;
-                case 'cocina':
-                    header('Location: Cocina/homec.php');
-                    break;
-                default:
-                    $_SESSION['error'] = "Rol de usuario no reconocido.";
-                    header('Location: login.php');
-                    exit;
+            // Verificar la contraseña usando password_verify
+            if (password_verify($password, $user['contraseña'])) {
+                // Guardar información en la sesión
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_role'] = $user['rol'];
+                $_SESSION['user_name'] = $user['nombre'];
+
+                // Redirigir al usuario según su rol
+                switch ($user['rol']) {
+                    case 'administrador':
+                        header('Location: Admin/homeAdmin.php');
+                        break;
+                    case 'bodega':
+                        header('Location: Bodega/homeb.php');
+                        break;
+                    case 'finanzas':
+                        header('Location: Finanzas/homef.php');
+                        break;
+                    case 'cocina':
+                        header('Location: Cocina/homec.php');
+                        break;
+                    default:
+                        $_SESSION['error'] = "Rol de usuario no reconocido.";
+                        header('Location: index.php');
+                        exit;
+                }
+                exit;
+            } else {
+                // Contraseña incorrecta
+                $_SESSION['error'] = "Contraseña incorrecta.";
+                header('Location: index.php');
+                exit;
             }
-            exit;
         } else {
-            // Si las credenciales son inválidas
-            $_SESSION['error'] = "Correo o contraseña inválidos.";
+            // Usuario no encontrado
+            $_SESSION['error'] = "Correo no registrado.";
             header('Location: index.php');
             exit;
         }
     } catch (Exception $e) {
-        // Manejo de errores de la base de datos
+        // Manejo de errores
         $_SESSION['error'] = "Error en el sistema: " . $e->getMessage();
         header('Location: error.php');
         exit;
     }
 } else {
-    // Si la solicitud no es POST, redirigimos al formulario de inicio de sesión
+    // Si no es un método POST, redirigir al formulario de inicio de sesión
     header('Location: index.php');
     exit;
 }
