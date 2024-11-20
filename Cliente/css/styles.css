@@ -2,7 +2,7 @@
 .header {
     position: sticky;
     top: 0;
-    background-color: #f59e0b;
+    background-color: #3b82f6; /* Azul */
     color: white;
     display: flex;
     justify-content: space-between;
@@ -41,7 +41,7 @@
     top: -5px;
     right: -10px;
     background-color: white;
-    color: #f59e0b;
+    color: #3b82f6; /* Azul */
     font-size: 0.8rem;
     font-weight: bold;
     border-radius: 50%;
@@ -55,7 +55,7 @@
 /* Hero Section */
 .hero {
     background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
-        url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+        url('https://images.unsplash.com/photo-1551218808-94e220e084d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200') center/cover no-repeat;
     height: 300px;
     display: flex;
     flex-direction: column;
@@ -63,7 +63,6 @@
     align-items: center;
     color: white;
 }
-
 
 .hero h2 {
     font-size: 2.5rem;
@@ -90,8 +89,13 @@
     transition: all 0.3s ease;
 }
 
+.categoria-link:hover {
+    background-color: #3b82f6; /* Azul */
+    color: white;
+}
+
 .categoria-activa {
-    background-color: #f59e0b;
+    background-color: #3b82f6; /* Azul */
     color: white;
 }
 
@@ -138,11 +142,11 @@
 
 .precio {
     font-weight: bold;
-    color: #f59e0b;
+    color: #3b82f6; /* Azul */
 }
 
 .btn-agregar {
-    background-color: #f59e0b;
+    background-color: #10b981; /* Verde */
     color: white;
     padding: 0.5rem 1rem;
     border: none;
@@ -152,7 +156,7 @@
 }
 
 .btn-agregar:hover {
-    background-color: #d97706;
+    background-color: #059669; /* Verde más oscuro */
 }
 
 /* Carrito */
@@ -160,7 +164,7 @@
     position: fixed;
     bottom: 20px;
     right: 20px;
-    width: 300px;
+    width: 350px;
     max-height: 80vh;
     background-color: white;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
@@ -189,7 +193,7 @@
 
 .item-price {
     margin-right: 1rem;
-    color: #f59e0b;
+    color: #10b981; /* Verde */
     font-weight: bold;
 }
 
@@ -200,95 +204,9 @@
     font-size: 1.2rem;
     cursor: pointer;
 }
-/* Estilos del ícono del carrito */
-.carrito-icon {
-    position: relative;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #f59e0b;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-}
 
-.carrito-icon svg {
-    width: 24px;
-    height: 24px;
-    color: white;
-}
-
-.carrito-icon .contador {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: white;
-    color: #f59e0b;
-    font-size: 0.8rem;
-    font-weight: bold;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-/* Carrito flotante */
-.carrito-flotante {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 350px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    padding: 1rem;
-    z-index: 1000;
-    display: none;
-}
-
-.carrito-flotante.show {
-    display: block;
-}
-
-.carrito-flotante h3 {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    font-weight: bold;
-}
-
-.cart-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.cart-item .item-name {
-    font-weight: bold;
-    color: #333;
-}
-
-.cart-item .item-price {
-    color: #f59e0b;
-    font-weight: bold;
-}
-
-.cart-item .remove-item {
-    background: none;
-    border: none;
-    color: #ff4d4d;
-    font-size: 1.25rem;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.cart-item .remove-item:hover {
-    color: #ff0000;
+.remove-item:hover {
+    color: #d32f2f;
 }
 
 .carrito-total {
@@ -299,30 +217,4 @@
     margin-top: 1rem;
     border-top: 1px solid #ddd;
     padding-top: 1rem;
-}
-
-.carrito-flotante input,
-.carrito-flotante select {
-    width: 100%;
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-}
-
-.carrito-flotante button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #f59e0b;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.carrito-flotante button:hover {
-    background-color: #d97706;
 }
